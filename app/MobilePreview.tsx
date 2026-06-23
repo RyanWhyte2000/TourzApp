@@ -68,7 +68,7 @@ function MobilePreview() {
       <div className="p-4">
         <button className="mb-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-violet-700 py-3 text-sm font-semibold text-white">
           <Sparkles className="size-4" />
-          Ask A.I
+          Supporty
         </button>
         <PropertyCard {...properties[0]} />
         <button className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-full border text-sm font-medium">

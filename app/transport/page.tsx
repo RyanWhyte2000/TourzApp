@@ -1,11 +1,10 @@
-import React from 'react'
+import PageShell from "../PageShell";
+import Transport from "../Transport";
 
-function Transport() {
+export default function TransportPage() {
   return (
-    <div>
-      Transport
-    </div>
-  )
+    <PageShell>
+      <Transport />
+    </PageShell>
+  );
 }
-
-export default Transport

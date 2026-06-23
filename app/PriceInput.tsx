@@ -14,3 +14,4 @@ function PriceInput({ label, value }: { label: string; value: string }) {
 }
 
 export default PriceInput
+ 

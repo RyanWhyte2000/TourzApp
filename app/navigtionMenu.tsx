@@ -33,7 +33,8 @@ export default function NavigationMenuDemo() {
           <span className="flex size-7 items-center justify-center rounded-full bg-violet-600 text-white">
             <Bot className="size-4" />
           </span>
-          Ask A.I
+          
+          Support
         </button>
         <button className="flex size-10 items-center justify-center rounded-full transition hover:bg-slate-100">
           <Bell className="size-5" />

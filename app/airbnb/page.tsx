@@ -1,10 +1,10 @@
 import PageShell from "../PageShell";
-import Food from "../Food";
+import AirBnb from "../AirBnb";
 
-export default function FoodPage() {
+export default function AirBnbPage() {
   return (
     <PageShell>
-      <Food />
+      <AirBnb />
     </PageShell>
   );
 }

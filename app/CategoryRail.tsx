@@ -1,15 +1,13 @@
-import { Home, Trees, Building2, Hotel, TentTree, Waves } from 'lucide-react';
-import React from 'react'
-const categories = [
-  { label: "Cabin", count: 12, icon: Home, active: true },
-  { label: "Country Side", count: 17, icon: Trees },
-  { label: "Tiny Homes", count: 12, icon: Building2 },
-  { label: "Farm Houses", count: 9, icon: Hotel },
-  { label: "Camping", count: 8, icon: TentTree },
-  { label: "Iconic Cities", count: 6, icon: Building2 },
-  { label: "Lake Front", count: 5, icon: Waves },
-];
-function CategoryRail() {
+import React from "react";
+
+type Category = {
+  label: string;
+  count: number;
+  icon: React.ComponentType<{ className?: string }>;
+  active?: boolean;
+};
+
+function CategoryRail({ categories }: { categories: Category[] }) {
   return (
     <div className="mt-5 flex gap-2 overflow-x-auto pb-2">
       {categories.map((category) => {
@@ -33,4 +31,4 @@ function CategoryRail() {
   );
 }
 
-export default CategoryRail
+export default CategoryRail;

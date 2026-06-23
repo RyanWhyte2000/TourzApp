@@ -1,11 +1,10 @@
-import React from 'react'
+import PageShell from "../PageShell";
+import HotelListings from "../HotelListings";
 
-function page() {
+export default function HotelPage() {
   return (
-    <div>
-      
-    </div>
-  )
+    <PageShell>
+      <HotelListings />
+    </PageShell>
+  );
 }
-
-export default page
