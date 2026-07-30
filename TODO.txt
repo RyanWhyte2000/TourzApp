@@ -1,0 +1,109 @@
+Tourz Feature Backlog
+=====================
+
+Tourz is currently a polished UI shell with mock data — most interactive
+behavior still needs to be built.
+
+
+HIGH PRIORITY — CORE USER FLOWS
+-------------------------------
+
+Search
+- [x] Make search fields editable (SearchField.tsx is read-only text today)
+- [ ] Add location autocomplete, date pickers, and guest/party selector
+- [ ] Wire the Search button to actually filter results or update URL params
+- [ ] Customize search fields per category (e.g. pickup/dropoff for transport, party size for food)
+- [ ] Connect mobile search icon in the header to a search modal/sheet
+
+Filters
+- [ ] Make filters functional — price range, property type, rooms/beds (Filters.tsx, PriceInput.tsx, CheckRow.tsx, OptionRow.tsx, TypeButton.tsx)
+- [ ] Connect filters to listing results
+- [ ] Implement "Clear all filters" with real state
+- [ ] Add a mobile filter drawer (sidebar is hidden below lg)
+
+Listings
+- [ ] Replace hardcoded mock data in AirBnb.tsx, Food.tsx, Transport.tsx, HotelListings.tsx with API/database
+- [ ] Make category rail buttons filter listings (CategoryRail.tsx)
+- [ ] Build listing detail pages (e.g. /airbnb/[id], /hotel/[id])
+- [ ] Add booking/reservation flow with checkout
+- [ ] Implement real pagination and "Show: 9" page size selector
+- [ ] Add sort options (price, rating, date) on the "Latest" dropdown
+- [ ] Add Map View vs Card View toggle
+- [ ] Add favorites/wishlist on heart button (with auth or local storage)
+
+
+NAVIGATION & PAGES
+------------------
+
+Header navigation (navigtionMenu.tsx)
+- [ ] Wire Home, About Us, Become a Host, Help Center — all currently href="#"
+- [ ] Add profile menu or login on user avatar button
+- [ ] Add notifications panel on bell icon
+- [ ] Add support chat/modal on Support button
+- [ ] Implement mobile hamburger menu
+
+Stub pages (exist but empty, no routes)
+- [ ] Profile — profile.tsx → create /profile page
+- [ ] Host signup — HostSignUp.tsx → create /host/signup page
+- [ ] Help center — HelpCenter.tsx → create /help page
+- [ ] About us — Aboutus.tsx → create /about page
+
+Routing cleanup
+- [ ] Decide canonical home route (/ vs /airbnb — both show the same content today)
+- [ ] Fix filename typo: navigtionMenu.tsx → navigationMenu.tsx
+
+
+AUTH & USER ACCOUNTS
+--------------------
+- [ ] Add authentication (NextAuth, Clerk, Supabase Auth, etc.)
+- [ ] Build login/signup pages
+- [ ] User profile: bookings, favorites, settings
+- [ ] Host onboarding flow for listing creation
+
+
+BACKEND & DATA
+--------------
+- [ ] Add API routes or server actions (app/api/ doesn't exist yet)
+- [ ] Set up database schema (listings, users, bookings, reviews)
+- [ ] Add environment config (.env for API keys, DB, auth)
+- [ ] Add loading, error, and not-found states (loading.tsx, error.tsx)
+- [ ] Add server-side data fetching for listing pages
+
+
+MOBILE & RESPONSIVE
+-------------------
+- [ ] Mobile filter drawer (filters hidden on small screens)
+- [ ] Mobile navigation drawer
+- [ ] Improve search panel tabs on small screens
+- [ ] Integrate or remove MobilePreview.tsx (orphaned prototype, not used)
+
+
+POLISH & CLEANUP
+----------------
+- [ ] Consolidate duplicate card components (propertycard.tsx vs ListingCard.tsx)
+- [ ] Remove unused Hotel.jsx (replaced by HotelListings.tsx)
+- [ ] Use next/image instead of CSS backgroundImage for listing photos
+- [ ] Add per-page SEO metadata
+- [ ] Wire up AI Support bot (UI exists, no backend)
+- [ ] Add tests (unit, integration, E2E)
+- [ ] Update README with project-specific setup docs
+
+
+SUGGESTED BUILD ORDER
+---------------------
+
+Phase 1 — Navigation links + stub pages (About, Help, Profile, Host)
+Phase 2 — Interactive search + filters connected to listing state
+Phase 3 — Listing detail pages + booking flow
+Phase 4 — Auth + favorites + user profile
+Phase 5 — API/database to replace mock data
+Phase 6 — Mobile UX + cleanup of duplicate/unused files
+
+
+ALREADY DONE
+------------
+- Page shell (nav + search panel wrapper)
+- Four category browse pages (Transport, AirBnb, Food, Hotel)
+- Shared listing layout and cards
+- Category tab routing in SearchPanel
+- Visual design system (Tailwind/shadcn)

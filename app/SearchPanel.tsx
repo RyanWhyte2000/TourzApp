@@ -8,11 +8,12 @@ import {
   CalendarDays,
   UserRound,
   Search,
-  Map,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import SearchField from "./SearchField";
+import LocationAutocomplete from "./LocationAutocomplete";
 
 const tabs = [
   { href: "/transport", label: "Transport", icon: CarFront },
@@ -23,6 +24,10 @@ const tabs = [
 
 function SearchPanel() {
   const pathname = usePathname();
+  const [where, setWhere] = useState("Montego Bay, Jamaica");
+  const [checkIn, setCheckIn] = useState("2024-01-05");
+  const [checkOut, setCheckOut] = useState("2024-01-25");
+  const [guests, setGuests] = useState("4");
 
   const activeTab =
     tabs.find((tab) => pathname === tab.href || (pathname === "/" && tab.href === "/airbnb"))
@@ -52,18 +57,33 @@ function SearchPanel() {
         </div>
 
         <div className="grid divide-y divide-slate-100 lg:grid-cols-[1.35fr_0.75fr_0.75fr_0.85fr_auto] lg:divide-x lg:divide-y-0">
-          <SearchField label="Where" value="Montego Bay, Jamaica" icon={<Map className="size-4" />} />
+          <LocationAutocomplete
+            value={where}
+            onChange={setWhere}
+          />
           <SearchField
             label="Check-in"
-            value="Jan. 5, 2024"
+            type="date"
+            value={checkIn}
+            onChange={setCheckIn}
             icon={<CalendarDays className="size-4" />}
           />
           <SearchField
             label="Check-out"
-            value="Jan. 25, 2024"
+            type="date"
+            value={checkOut}
+            onChange={setCheckOut}
             icon={<CalendarDays className="size-4" />}
           />
-          <SearchField label="Guests" value="4 Adults" icon={<UserRound className="size-4" />} />
+          <SearchField
+            label="Guests"
+            type="number"
+            value={guests}
+            onChange={setGuests}
+            min={1}
+            icon={<UserRound className="size-4" />}
+            placeholder="Number of guests"
+          />
           <button className="m-3 inline-flex h-14 items-center justify-center gap-2 rounded-r-[1rem] bg-violet-700 px-7 text-sm font-semibold text-white transition hover:bg-violet-800 lg:m-0 lg:h-auto lg:rounded-r-[1.3rem]">
             <Search className="size-4" />
             Search
