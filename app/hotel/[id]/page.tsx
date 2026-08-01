@@ -1,23 +1,18 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { hotels } from "../../HotelListings";
 import ListingDetail from "../../ListingDetail";
 import PageShell from "../../PageShell";
-
-export function generateStaticParams() {
-  return hotels.map(({ id }) => ({ id }));
-}
+import { getListing } from "@/lib/listings/queries";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
-  const item = hotels.find((listing) => listing.id === id);
+  const item = await getListing("hotel", id);
   return { title: item ? `${item.title} | Tourz` : "Listing not found | Tourz" };
 }
 
 export default async function HotelDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const item = hotels.find((listing) => listing.id === id);
+  const item = await getListing("hotel", id);
   if (!item) notFound();
-
   return <PageShell><ListingDetail category="hotel" item={item} /></PageShell>;
 }

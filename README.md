@@ -1,5 +1,15 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Supabase setup
+
+1. Create a Supabase project.
+2. Open the project SQL Editor and run the files in `supabase/migrations/` in filename order.
+3. Copy `.env.example` to `.env.local`.
+4. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from the Supabase project Connect dialog.
+5. Start the app with `npm run dev`.
+
+The migrations create and seed `public.listings`, enable row-level security, grant public read access only to published listings, and create the paginated `search_listings` database function used by the search and filter UI.
+
 ## Getting Started
 
 First, run the development server:

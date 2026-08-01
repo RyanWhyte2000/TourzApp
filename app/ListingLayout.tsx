@@ -5,6 +5,7 @@ import type { CategoryRailItem } from "./CategoryRail";
 import Filters from "./Filters";
 import ListingCard from "./ListingCard";
 import MobileFilters from "./MobileFilters";
+import Pagination from "./Pagination";
 
 export type ListingItem = {
   id: string;
@@ -39,6 +40,8 @@ export type ListingSearchParams = {
   seats?: string | string[];
   luggage?: string | string[];
   rail?: string | string[];
+  page?: string | string[];
+  pageSize?: string | string[];
 };
 
 export type ListingCategory = "airbnb" | "hotel" | "food" | "transport";
@@ -115,6 +118,8 @@ type ListingLayoutProps = {
   location: string;
   categories: CategoryRailItem[];
   items: ListingItem[];
+  currentPage: number;
+  pageSize: number;
 };
 
 export default function ListingLayout({
@@ -123,6 +128,8 @@ export default function ListingLayout({
   location,
   categories,
   items,
+  currentPage,
+  pageSize,
 }: ListingLayoutProps) {
   return (
     <div className="border-t border-slate-200/80 px-4 py-5 sm:px-7 lg:px-10">
@@ -173,23 +180,11 @@ export default function ListingLayout({
         <Filters category={category} />
       </div>
 
-      <div className="mt-6 flex items-center justify-between text-sm">
-        <div className="flex items-center gap-4">
-          {["1", "2", "3", "...", "8", "9", "10"].map((page) => (
-            <button
-              key={page}
-              className={`size-8 rounded-full ${
-                page === "2" ? "bg-slate-100 font-semibold" : "text-slate-600"
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-        </div>
-        <button className="inline-flex items-center gap-2 text-slate-700">
-          Show: 9 <ChevronDown className="size-4" />
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        pageSize={pageSize}
+        totalCount={resultCount}
+      />
     </div>
   );
 }

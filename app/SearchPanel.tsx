@@ -127,6 +127,7 @@ function CategorySearchForm({
     event.preventDefault();
     const params = new URLSearchParams(searchParams.toString());
     categoryParams.forEach((name) => params.delete(name));
+    params.delete("page");
 
     const values =
       category === "transport"
