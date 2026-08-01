@@ -89,6 +89,7 @@ function AirBnb({ search = {} }: { search?: ListingSearchParams }) {
 
   return (
     <ListingLayout
+      category="airbnb"
       resultCount={items.length}
       location={searchLocation(search)}
       categories={categories}

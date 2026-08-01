@@ -106,6 +106,7 @@ function Food({ search = {} }: { search?: ListingSearchParams }) {
 
   return (
     <ListingLayout
+      category="food"
       resultCount={items.length}
       location={searchLocation(search)}
       categories={categories}

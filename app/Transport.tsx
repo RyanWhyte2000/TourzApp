@@ -106,6 +106,7 @@ function Transport({ search = {} }: { search?: ListingSearchParams }) {
 
   return (
     <ListingLayout
+      category="transport"
       resultCount={items.length}
       location={searchLocation(search)}
       categories={categories}

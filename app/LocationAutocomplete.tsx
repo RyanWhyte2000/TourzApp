@@ -19,11 +19,15 @@ const destinations = [
 type LocationAutocompleteProps = {
   value: string;
   onChange: (value: string) => void;
+  label?: string;
+  placeholder?: string;
 };
 
 export default function LocationAutocomplete({
   value,
   onChange,
+  label = "Where",
+  placeholder = "Search destinations",
 }: LocationAutocompleteProps) {
   const inputId = useId();
   const listboxId = useId();
@@ -65,7 +69,7 @@ export default function LocationAutocomplete({
       <Map className="size-4 shrink-0 text-slate-900" aria-hidden="true" />
       <div className="min-w-0 flex-1">
         <label htmlFor={inputId} className="text-xs text-slate-500">
-          Where
+          {label}
         </label>
         <input
           id={inputId}
@@ -80,7 +84,7 @@ export default function LocationAutocomplete({
           }
           type="text"
           value={value}
-          placeholder="Search destinations"
+          placeholder={placeholder}
           autoComplete="off"
           onFocus={() => setIsOpen(true)}
           onChange={(event) => {

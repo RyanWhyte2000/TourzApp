@@ -106,6 +106,7 @@ function HotelListings({ search = {} }: { search?: ListingSearchParams }) {
 
   return (
     <ListingLayout
+      category="hotel"
       resultCount={items.length}
       location={searchLocation(search)}
       categories={categories}

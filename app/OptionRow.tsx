@@ -1,13 +1,14 @@
 import React from 'react'
-const bedroomOptions = ["Any", "1", "2", "3", "4", "5"];
+const defaultOptions = ["Any", "1", "2", "3", "4", "5"];
 
-function  OptionRow({ label }: { label: string }) {
+function OptionRow({ label, options = defaultOptions }: { label: string; options?: string[] }) {
   return (
     <div className="mt-4">
       <p className="mb-2 text-sm font-medium">{label}</p>
       <div className="flex flex-wrap gap-2">
-        {bedroomOptions.map((option) => (
+        {options.map((option) => (
           <button
+            type="button"
             key={option}
             className={`size-9 rounded-full border text-sm ${
               option === "Any"

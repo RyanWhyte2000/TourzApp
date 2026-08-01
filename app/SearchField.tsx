@@ -13,7 +13,7 @@ function SearchField({
   value: string;
   onChange: (value: string) => void;
   icon: React.ReactNode;
-  type?: "text" | "date" | "number";
+  type?: "text" | "date" | "time" | "number";
   placeholder?: string;
   min?: number;
 }) {

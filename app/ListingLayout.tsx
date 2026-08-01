@@ -17,17 +17,22 @@ export type ListingItem = {
 
 export type ListingSearchParams = {
   where?: string | string[];
+  pickup?: string | string[];
+  dropoff?: string | string[];
   checkIn?: string | string[];
   checkOut?: string | string[];
   guests?: string | string[];
 };
+
+export type ListingCategory = "airbnb" | "hotel" | "food" | "transport";
 
 export function filterListings(
   items: ListingItem[],
   search: ListingSearchParams,
   area = "Montego Bay, Jamaica",
 ) {
-  const rawWhere = Array.isArray(search.where) ? search.where[0] : search.where;
+  const locationParam = search.where ?? search.pickup;
+  const rawWhere = Array.isArray(locationParam) ? locationParam[0] : locationParam;
   const destination = rawWhere?.split(",")[0].trim().toLocaleLowerCase() ?? "";
 
   if (!destination) return items;
@@ -42,7 +47,8 @@ export function filterListings(
 }
 
 export function searchLocation(search: ListingSearchParams) {
-  const where = Array.isArray(search.where) ? search.where[0] : search.where;
+  const locationParam = search.where ?? search.pickup;
+  const where = Array.isArray(locationParam) ? locationParam[0] : locationParam;
   return where?.trim() || "Montego Bay, Jamaica";
 }
 
@@ -54,6 +60,7 @@ type Category = {
 };
 
 type ListingLayoutProps = {
+  category: ListingCategory;
   resultCount: number;
   location: string;
   categories: Category[];
@@ -61,6 +68,7 @@ type ListingLayoutProps = {
 };
 
 export default function ListingLayout({
+  category,
   resultCount,
   location,
   categories,
@@ -107,7 +115,7 @@ export default function ListingLayout({
             </div>
           )}
         </section>
-        <Filters />
+        <Filters category={category} />
       </div>
 
       <div className="mt-6 flex items-center justify-between text-sm">
