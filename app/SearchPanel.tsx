@@ -50,7 +50,7 @@ const categoryParams = [
   "partySize",
 ];
 
-function SearchPanel() {
+function SearchPanel({ onSearchComplete }: { onSearchComplete?: () => void }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const category = categoryByPath[pathname] ?? "airbnb";
@@ -85,13 +85,20 @@ function SearchPanel() {
         <CategorySearchForm
           key={`${category}-${searchParams.toString()}`}
           category={category}
+          onSearchComplete={onSearchComplete}
         />
       </div>
     </section>
   );
 }
 
-function CategorySearchForm({ category }: { category: Category }) {
+function CategorySearchForm({
+  category,
+  onSearchComplete,
+}: {
+  category: Category;
+  onSearchComplete?: () => void;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -137,6 +144,7 @@ function CategorySearchForm({ category }: { category: Category }) {
     });
 
     router.push(`${pathname}?${params.toString()}`);
+    onSearchComplete?.();
   }
 
   return (
