@@ -15,6 +15,37 @@ export type ListingItem = {
   totalPrice?: string;
 };
 
+export type ListingSearchParams = {
+  where?: string | string[];
+  checkIn?: string | string[];
+  checkOut?: string | string[];
+  guests?: string | string[];
+};
+
+export function filterListings(
+  items: ListingItem[],
+  search: ListingSearchParams,
+  area = "Montego Bay, Jamaica",
+) {
+  const rawWhere = Array.isArray(search.where) ? search.where[0] : search.where;
+  const destination = rawWhere?.split(",")[0].trim().toLocaleLowerCase() ?? "";
+
+  if (!destination) return items;
+
+  return items.filter((item) =>
+    [item.title, item.subtitle, area, ...(item.meta ?? []).map(({ label }) => label)]
+      .filter(Boolean)
+      .join(" ")
+      .toLocaleLowerCase()
+      .includes(destination),
+  );
+}
+
+export function searchLocation(search: ListingSearchParams) {
+  const where = Array.isArray(search.where) ? search.where[0] : search.where;
+  return where?.trim() || "Montego Bay, Jamaica";
+}
+
 type Category = {
   label: string;
   count: number;
@@ -63,9 +94,18 @@ export default function ListingLayout({
 
       <div className="mt-5 grid gap-7 lg:grid-cols-[1fr_360px]">
         <section className="grid gap-5 sm:grid-cols-2">
-          {items.map((item) => (
-            <ListingCard key={`${item.title}-${item.image}`} {...item} />
-          ))}
+          {items.length > 0 ? (
+            items.map((item) => (
+              <ListingCard key={`${item.title}-${item.image}`} {...item} />
+            ))
+          ) : (
+            <div className="col-span-full rounded-2xl border border-slate-200 bg-slate-50 px-6 py-12 text-center">
+              <h2 className="text-lg font-semibold text-slate-900">No results found</h2>
+              <p className="mt-2 text-sm text-slate-500">
+                Try another destination or clear the location field.
+              </p>
+            </div>
+          )}
         </section>
         <Filters />
       </div>

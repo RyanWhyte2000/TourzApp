@@ -1,5 +1,9 @@
 import { BedDouble, Bath, Home, Trees, Building2, Hotel, TentTree, Waves } from "lucide-react";
-import ListingLayout from "./ListingLayout";
+import ListingLayout, {
+  filterListings,
+  ListingSearchParams,
+  searchLocation,
+} from "./ListingLayout";
 
 const categories = [
   { label: "Cabin", count: 12, icon: Home, active: true },
@@ -80,13 +84,15 @@ const properties = [
   },
 ];
 
-function AirBnb() {
+function AirBnb({ search = {} }: { search?: ListingSearchParams }) {
+  const items = filterListings(properties, search);
+
   return (
     <ListingLayout
-      resultCount={1024}
-      location="Montego Bay, Jamaica"
+      resultCount={items.length}
+      location={searchLocation(search)}
       categories={categories}
-      items={properties}
+      items={items}
     />
   );
 }

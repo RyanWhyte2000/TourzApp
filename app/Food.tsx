@@ -1,5 +1,9 @@
 import { UtensilsCrossed, Fish, Pizza, Flame, Wine, Clock } from "lucide-react";
-import ListingLayout from "./ListingLayout";
+import ListingLayout, {
+  filterListings,
+  ListingSearchParams,
+  searchLocation,
+} from "./ListingLayout";
 
 const categories = [
   { label: "Jamaican", count: 42, icon: Flame, active: true },
@@ -97,13 +101,15 @@ const restaurants = [
   },
 ];
 
-function Food() {
+function Food({ search = {} }: { search?: ListingSearchParams }) {
+  const items = filterListings(restaurants, search);
+
   return (
     <ListingLayout
-      resultCount={312}
-      location="Montego Bay, Jamaica"
+      resultCount={items.length}
+      location={searchLocation(search)}
       categories={categories}
-      items={restaurants}
+      items={items}
     />
   );
 }

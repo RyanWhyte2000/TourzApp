@@ -1,5 +1,9 @@
 import { CarFront, Bus, Truck, Bike, Gauge, Users } from "lucide-react";
-import ListingLayout from "./ListingLayout";
+import ListingLayout, {
+  filterListings,
+  ListingSearchParams,
+  searchLocation,
+} from "./ListingLayout";
 
 const categories = [
   { label: "Sedan", count: 24, icon: CarFront, active: true },
@@ -97,13 +101,15 @@ const vehicles = [
   },
 ];
 
-function Transport() {
+function Transport({ search = {} }: { search?: ListingSearchParams }) {
+  const items = filterListings(vehicles, search);
+
   return (
     <ListingLayout
-      resultCount={486}
-      location="Montego Bay, Jamaica"
+      resultCount={items.length}
+      location={searchLocation(search)}
       categories={categories}
-      items={vehicles}
+      items={items}
     />
   );
 }

@@ -1,5 +1,9 @@
 import { Hotel, Building2, Waves, Star, BedDouble, Wifi } from "lucide-react";
-import ListingLayout from "./ListingLayout";
+import ListingLayout, {
+  filterListings,
+  ListingSearchParams,
+  searchLocation,
+} from "./ListingLayout";
 
 const categories = [
   { label: "Luxury", count: 14, icon: Star, active: true },
@@ -97,13 +101,15 @@ const hotels = [
   },
 ];
 
-function HotelListings() {
+function HotelListings({ search = {} }: { search?: ListingSearchParams }) {
+  const items = filterListings(hotels, search);
+
   return (
     <ListingLayout
-      resultCount={648}
-      location="Montego Bay, Jamaica"
+      resultCount={items.length}
+      location={searchLocation(search)}
       categories={categories}
-      items={hotels}
+      items={items}
     />
   );
 }

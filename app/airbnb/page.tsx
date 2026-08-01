@@ -1,10 +1,16 @@
 import PageShell from "../PageShell";
 import AirBnb from "../AirBnb";
 
-export default function AirBnbPage() {
+export default async function AirBnbPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const search = await searchParams;
+
   return (
     <PageShell>
-      <AirBnb />
+      <AirBnb search={search} />
     </PageShell>
   );
 }
