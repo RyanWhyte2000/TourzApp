@@ -48,3 +48,5 @@ $$;
 
 grant execute on function public.search_listings(text, text, text[], numeric, numeric, numeric, jsonb, integer, integer)
 to anon, authenticated;
+
+notify pgrst, 'reload schema';
