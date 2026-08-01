@@ -1,10 +1,13 @@
 import { ChevronDown, LayoutGrid, ListFilter, Map } from "lucide-react";
 import React from "react";
 import CategoryRail from "./CategoryRail";
+import type { CategoryRailItem } from "./CategoryRail";
 import Filters from "./Filters";
 import ListingCard from "./ListingCard";
+import MobileFilters from "./MobileFilters";
 
 export type ListingItem = {
+  id: string;
   title: string;
   image: string;
   price: string;
@@ -13,6 +16,8 @@ export type ListingItem = {
   meta?: { icon: React.ReactNode; label: string }[];
   priceSuffix?: string;
   totalPrice?: string;
+  filterTags?: string[];
+  filterValues?: Record<string, number>;
 };
 
 export type ListingSearchParams = {
@@ -22,6 +27,18 @@ export type ListingSearchParams = {
   checkIn?: string | string[];
   checkOut?: string | string[];
   guests?: string | string[];
+  tag?: string | string[];
+  minPrice?: string | string[];
+  maxPrice?: string | string[];
+  bedrooms?: string | string[];
+  beds?: string | string[];
+  bathrooms?: string | string[];
+  starRating?: string | string[];
+  rooms?: string | string[];
+  minRating?: string | string[];
+  seats?: string | string[];
+  luggage?: string | string[];
+  rail?: string | string[];
 };
 
 export type ListingCategory = "airbnb" | "hotel" | "food" | "transport";
@@ -35,15 +52,55 @@ export function filterListings(
   const rawWhere = Array.isArray(locationParam) ? locationParam[0] : locationParam;
   const destination = rawWhere?.split(",")[0].trim().toLocaleLowerCase() ?? "";
 
-  if (!destination) return items;
+  const value = (param?: string | string[]) => Array.isArray(param) ? param[0] : param;
+  const tags = search.tag ? (Array.isArray(search.tag) ? search.tag : [search.tag]) : [];
+  const rail = value(search.rail)?.toLocaleLowerCase();
+  const minimumPrice = Number(value(search.minPrice) ?? 0);
+  const maximumPrice = Number(value(search.maxPrice) ?? Number.POSITIVE_INFINITY);
+  const numericFilters = [
+    ["bedrooms", "bed", value(search.bedrooms)],
+    ["beds", "bed", value(search.beds)],
+    ["bathrooms", "bath", value(search.bathrooms)],
+    ["starRating", "star", value(search.starRating)],
+    ["rooms", "room", value(search.rooms)],
+    ["seats", "seat", value(search.seats)],
+    ["luggage", "luggage", value(search.luggage)],
+  ] as const;
 
-  return items.filter((item) =>
-    [item.title, item.subtitle, area, ...(item.meta ?? []).map(({ label }) => label)]
+  return items.filter((item) => {
+    const haystack = [
+      item.title,
+      item.subtitle,
+      area,
+      ...(item.meta ?? []).map(({ label }) => label),
+      ...(item.filterTags ?? []),
+    ]
       .filter(Boolean)
       .join(" ")
-      .toLocaleLowerCase()
-      .includes(destination),
-  );
+      .toLocaleLowerCase();
+    const price = Number(item.price.replace(/[^0-9.]/g, ""));
+    const rating = Number(item.rating);
+
+    if (destination && !haystack.includes(destination)) return false;
+    if (price < minimumPrice || price > maximumPrice) return false;
+    if (tags.some((tag) => !haystack.includes(tag.toLocaleLowerCase()))) return false;
+    if (rail && !haystack.includes(rail)) return false;
+
+    const minRating = Number.parseFloat(value(search.minRating) ?? "0");
+    if (rating < minRating) return false;
+
+    for (const [param, label, selected] of numericFilters) {
+      if (!selected || selected === "Any") continue;
+      const required = Number.parseFloat(selected);
+      const matchingMeta = item.meta?.find(({ label: metaLabel }) =>
+        metaLabel.toLocaleLowerCase().includes(label),
+      );
+      const available = item.filterValues?.[param] ?? Number.parseFloat(matchingMeta?.label ?? "0");
+      if (available < required) return false;
+    }
+
+    return true;
+  });
 }
 
 export function searchLocation(search: ListingSearchParams) {
@@ -52,18 +109,11 @@ export function searchLocation(search: ListingSearchParams) {
   return where?.trim() || "Montego Bay, Jamaica";
 }
 
-type Category = {
-  label: string;
-  count: number;
-  icon: React.ComponentType<{ className?: string }>;
-  active?: boolean;
-};
-
 type ListingLayoutProps = {
   category: ListingCategory;
   resultCount: number;
   location: string;
-  categories: Category[];
+  categories: CategoryRailItem[];
   items: ListingItem[];
 };
 
@@ -82,6 +132,7 @@ export default function ListingLayout({
           <span className="font-semibold">{location}</span>
         </h1>
         <div className="flex flex-wrap items-center gap-2">
+          <MobileFilters category={category} resultCount={resultCount} />
           <button className="inline-flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 text-sm font-medium shadow-sm">
             <ListFilter className="size-4" />
             Latest
@@ -104,7 +155,11 @@ export default function ListingLayout({
         <section className="grid gap-5 sm:grid-cols-2">
           {items.length > 0 ? (
             items.map((item) => (
-              <ListingCard key={`${item.title}-${item.image}`} {...item} />
+              <ListingCard
+                key={item.id}
+                {...item}
+                href={`/${category}/${item.id}`}
+              />
             ))
           ) : (
             <div className="col-span-full rounded-2xl border border-slate-200 bg-slate-50 px-6 py-12 text-center">

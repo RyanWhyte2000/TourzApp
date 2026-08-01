@@ -27,14 +27,6 @@ const tabs = [
 
 type Category = "transport" | "airbnb" | "food" | "hotel";
 
-const categoryByPath: Record<string, Category> = {
-  "/": "airbnb",
-  "/airbnb": "airbnb",
-  "/food": "food",
-  "/hotel": "hotel",
-  "/transport": "transport",
-};
-
 const categoryParams = [
   "where",
   "pickup",
@@ -53,7 +45,13 @@ const categoryParams = [
 function SearchPanel({ onSearchComplete }: { onSearchComplete?: () => void }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const category = categoryByPath[pathname] ?? "airbnb";
+  const category: Category = pathname.startsWith("/transport")
+    ? "transport"
+    : pathname.startsWith("/food")
+      ? "food"
+      : pathname.startsWith("/hotel")
+        ? "hotel"
+        : "airbnb";
 
   return (
     <section className="bg-slate-50 px-4 py-6 sm:px-7 lg:px-10 lg:py-8">
@@ -143,7 +141,8 @@ function CategorySearchForm({
       if (value) params.set(name, value);
     });
 
-    router.push(`${pathname}?${params.toString()}`);
+    const resultsPath = pathname === "/" ? "/" : `/${category}`;
+    router.push(`${resultsPath}?${params.toString()}`);
     onSearchComplete?.();
   }
 

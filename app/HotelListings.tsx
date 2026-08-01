@@ -1,22 +1,26 @@
-import { Hotel, Building2, Waves, Star, BedDouble, Wifi } from "lucide-react";
+import { Building2, Waves, Star, BedDouble, Wifi } from "lucide-react";
+import type { CategoryRailItem } from "./CategoryRail";
 import ListingLayout, {
   filterListings,
   ListingSearchParams,
   searchLocation,
 } from "./ListingLayout";
 
-const categories = [
-  { label: "Luxury", count: 14, icon: Star, active: true },
-  { label: "Resort", count: 22, icon: Waves },
-  { label: "Boutique", count: 18, icon: Building2 },
-  { label: "Beachfront", count: 16, icon: Waves },
-  { label: "Budget", count: 34, icon: Hotel },
-  { label: "All-Inclusive", count: 11, icon: Hotel },
+const categories: CategoryRailItem[] = [
+  { label: "Luxury", count: 3, icon: "star" },
+  { label: "Resort", count: 5, icon: "waves" },
+  { label: "Boutique", count: 1, icon: "building" },
+  { label: "Beachfront", count: 1, icon: "waves" },
+  { label: "Budget", count: 2, icon: "hotel" },
+  { label: "All-Inclusive", count: 2, icon: "hotel" },
 ];
 
-const hotels = [
+export const hotels = [
   {
+    id: "half-moon-resort",
     title: "Half Moon Resort",
+    filterTags: ["Hotel", "Resort", "Luxury", "Swimming pool", "Breakfast included"],
+    filterValues: { starRating: 5, rooms: 2 },
     image:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80",
     price: "$420",
@@ -30,7 +34,10 @@ const hotels = [
     totalPrice: "$8,400/total",
   },
   {
+    id: "secrets-st-james",
     title: "Secrets St. James",
+    filterTags: ["Hotel", "Resort", "Luxury", "All-inclusive", "Swimming pool"],
+    filterValues: { starRating: 5, rooms: 2 },
     image:
       "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=900&q=80",
     price: "$380",
@@ -44,7 +51,10 @@ const hotels = [
     totalPrice: "$7,600/total",
   },
   {
+    id: "riu-montego-bay",
     title: "Riu Montego Bay",
+    filterTags: ["Hotel", "Resort", "Beachfront", "All-inclusive", "Swimming pool", "Airport shuttle"],
+    filterValues: { starRating: 4, rooms: 2 },
     image:
       "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80",
     price: "$290",
@@ -58,7 +68,10 @@ const hotels = [
     totalPrice: "$5,800/total",
   },
   {
+    id: "deja-resort",
     title: "Deja Resort",
+    filterTags: ["Hotel", "Resort", "Budget", "Breakfast included"],
+    filterValues: { starRating: 3, rooms: 1 },
     image:
       "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=80",
     price: "$185",
@@ -72,7 +85,10 @@ const hotels = [
     totalPrice: "$3,700/total",
   },
   {
+    id: "s-hotel-montego-bay",
     title: "S Hotel Montego Bay",
+    filterTags: ["Hotel", "Boutique", "Luxury", "Airport shuttle"],
+    filterValues: { starRating: 4, rooms: 1 },
     image:
       "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=900&q=80",
     price: "$310",
@@ -86,7 +102,10 @@ const hotels = [
     totalPrice: "$6,200/total",
   },
   {
+    id: "holiday-inn-resort",
     title: "Holiday Inn Resort",
+    filterTags: ["Hotel", "Resort", "Budget", "Swimming pool", "Breakfast included"],
+    filterValues: { starRating: 4, rooms: 2 },
     image:
       "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80",
     price: "$220",

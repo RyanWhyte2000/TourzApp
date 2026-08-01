@@ -4,14 +4,18 @@ function TypeButton({
   active,
   icon,
   label,
+  onClick,
 }: {
   active?: boolean;
   icon: React.ReactNode;
   label: string;
+  onClick: () => void;
 }) {
   return (
     <button
       type="button"
+      aria-pressed={active}
+      onClick={onClick}
       className={`flex h-20 flex-col items-start justify-center gap-2 rounded-xl border px-4 text-left text-sm font-semibold ${
         active
           ? "border-violet-600 bg-violet-50 text-violet-700"

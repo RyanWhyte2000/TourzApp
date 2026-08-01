@@ -1,22 +1,30 @@
-import React from 'react'
+import { Check } from "lucide-react";
 
 function CheckRow({
-  checked,
+  checked = false,
   title,
   copy,
+  onChange,
 }: {
   checked?: boolean;
   title: string;
   copy: string;
+  onChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="flex items-start gap-3">
+    <label className="flex cursor-pointer items-start gap-3">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(event) => onChange(event.target.checked)}
+        className="sr-only"
+      />
       <span
         className={`mt-0.5 flex size-5 items-center justify-center rounded border ${
-          checked ? "border-violet-600 bg-violet-50 text-violet-700" : "border-slate-200"
+          checked ? "border-violet-600 bg-violet-600 text-white" : "border-slate-200"
         }`}
       >
-        {checked ? "✓" : ""}
+        {checked && <Check className="size-3.5" />}
       </span>
       <span>
         <span className="block text-sm font-medium">{title}</span>
@@ -26,4 +34,4 @@ function CheckRow({
   );
 }
 
-export default CheckRow
+export default CheckRow;

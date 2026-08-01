@@ -1,22 +1,25 @@
 import { UtensilsCrossed, Fish, Pizza, Flame, Wine, Clock } from "lucide-react";
+import type { CategoryRailItem } from "./CategoryRail";
 import ListingLayout, {
   filterListings,
   ListingSearchParams,
   searchLocation,
 } from "./ListingLayout";
 
-const categories = [
-  { label: "Jamaican", count: 42, icon: Flame, active: true },
-  { label: "Seafood", count: 28, icon: Fish },
-  { label: "Italian", count: 15, icon: Pizza },
-  { label: "Street Food", count: 36, icon: UtensilsCrossed },
-  { label: "Fine Dining", count: 12, icon: Wine },
-  { label: "Vegetarian", count: 18, icon: UtensilsCrossed },
+const categories: CategoryRailItem[] = [
+  { label: "Jamaican", count: 3, icon: "flame" },
+  { label: "Seafood", count: 2, icon: "fish" },
+  { label: "Italian", count: 1, icon: "pizza" },
+  { label: "Street Food", count: 1, icon: "utensils" },
+  { label: "Fine Dining", count: 1, icon: "wine" },
+  { label: "Vegetarian", count: 3, icon: "utensils" },
 ];
 
-const restaurants = [
+export const restaurants = [
   {
+    id: "scotchies-jerk-centre",
     title: "Scotchies Jerk Centre",
+    filterTags: ["Jamaican", "Gluten-free", "Open now"],
     image:
       "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
     price: "$18",
@@ -30,7 +33,9 @@ const restaurants = [
     totalPrice: "$360/total",
   },
   {
+    id: "pelican-grill",
     title: "The Pelican Grill",
+    filterTags: ["Seafood", "Gluten-free", "Accepts reservations"],
     image:
       "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80",
     price: "$45",
@@ -44,7 +49,9 @@ const restaurants = [
     totalPrice: "$900/total",
   },
   {
+    id: "margaritaville-montego-bay",
     title: "Margaritaville Montego Bay",
+    filterTags: ["Jamaican", "Vegetarian", "Open now", "Accepts reservations"],
     image:
       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80",
     price: "$32",
@@ -58,7 +65,9 @@ const restaurants = [
     totalPrice: "$640/total",
   },
   {
+    id: "pier-one-seafood",
     title: "Pier One Seafood",
+    filterTags: ["Seafood", "Gluten-free", "Accepts reservations"],
     image:
       "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=900&q=80",
     price: "$55",
@@ -72,7 +81,9 @@ const restaurants = [
     totalPrice: "$1,100/total",
   },
   {
+    id: "juici-patties",
     title: "Juici Patties",
+    filterTags: ["Jamaican", "Street food", "Vegetarian", "Open now"],
     image:
       "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80",
     price: "$8",
@@ -86,7 +97,9 @@ const restaurants = [
     totalPrice: "$160/total",
   },
   {
+    id: "evitas-italian-restaurant",
     title: "Evita's Italian Restaurant",
+    filterTags: ["Italian", "Vegetarian", "Vegan", "Accepts reservations"],
     image:
       "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=900&q=80",
     price: "$38",
