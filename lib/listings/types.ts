@@ -19,3 +19,14 @@ export type ListingQuery = {
   category: ListingCategory;
   search?: ListingSearchParams;
 };
+
+export type MapListing = {
+  id: string;
+  title: string;
+  image: string;
+  price: number;
+  rating: number;
+  subtitle: string | null;
+  latitude: number;
+  longitude: number;
+};

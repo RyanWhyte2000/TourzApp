@@ -1,5 +1,5 @@
 import type { CategoryRailItem } from "./CategoryRail";
-import ListingLayout, { ListingSearchParams, searchLocation } from "./ListingLayout";
+import ListingLayout, { ListingSearchParams, searchLocation, searchView } from "./ListingLayout";
 import { getCategoryCounts, getListings } from "@/lib/listings/queries";
 
 const categoryOptions: Omit<CategoryRailItem, "count">[] = [
@@ -29,6 +29,8 @@ async function AirBnb({ search = {} }: { search?: ListingSearchParams }) {
       items={result.items}
       currentPage={result.page}
       pageSize={result.pageSize}
+      mapItems={result.mapItems}
+      view={searchView(search)}
     />
   );
 }

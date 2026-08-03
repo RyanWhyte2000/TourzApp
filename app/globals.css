@@ -131,3 +131,35 @@
     @apply font-sans;
   }
 }
+
+.tourz-price-marker {
+  background: transparent;
+  border: 0;
+}
+
+.tourz-price-marker span {
+  display: flex;
+  min-width: 3.75rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 9999px;
+  background: white;
+  color: rgb(15 23 42);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgb(15 23 42 / 0.18);
+}
+
+.tourz-price-marker span::after {
+  position: absolute;
+  bottom: -0.3rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  transform: rotate(45deg);
+  border-right: 1px solid rgb(226 232 240);
+  border-bottom: 1px solid rgb(226 232 240);
+  background: white;
+  content: "";
+}

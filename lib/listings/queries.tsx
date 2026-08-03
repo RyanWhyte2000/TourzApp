@@ -77,6 +77,11 @@ export async function getListings({ category, search = {} }: ListingQuery) {
     ? (numberFrom(search.pageSize) ?? 9)
     : 9;
   const page = Math.max(1, Math.floor(numberFrom(search.page) ?? 1));
+  const requestedSort = first(search.sort) ?? "latest";
+  const sort = ["latest", "oldest", "rating", "price_asc", "price_desc"].includes(requestedSort)
+    ? requestedSort
+    : "latest";
+  const includeMap = first(search.view) === "map";
 
   const numericFilters = Object.fromEntries(
     ["bedrooms", "beds", "bathrooms", "starRating", "rooms", "seats", "luggage"]
@@ -94,15 +99,22 @@ export async function getListings({ category, search = {} }: ListingQuery) {
     p_numeric_filters: numericFilters,
     p_limit: pageSize,
     p_offset: (page - 1) * pageSize,
+    p_sort: sort,
+    p_include_map: includeMap,
   });
 
   if (error) throw new Error(`Unable to load ${category} listings: ${error.message}`);
-  const result = data as { items?: ListingRow[]; totalCount?: number } | null;
+  const result = data as {
+    items?: ListingRow[];
+    mapItems?: import("./types").MapListing[];
+    totalCount?: number;
+  } | null;
   return {
     items: (result?.items ?? []).map(toListingItem),
     totalCount: Number(result?.totalCount ?? 0),
     page,
     pageSize,
+    mapItems: result?.mapItems ?? [],
   };
 }
 

@@ -1,8 +1,10 @@
-import { Heart, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import FavoriteButton from "./FavoriteButton";
 
 export default function ListingCard({
+  id,
   title,
   image,
   price,
@@ -13,6 +15,7 @@ export default function ListingCard({
   totalPrice = "$12,400/total",
   href,
 }: {
+  id: string;
   title: string;
   image: string;
   price: string;
@@ -36,13 +39,9 @@ export default function ListingCard({
           {rating}
           <Star className="size-4 fill-amber-400 text-amber-400" />
         </span>
-        <button
-          type="button"
-          aria-label={`Save ${title}`}
-          className="absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-white/75 text-white backdrop-blur"
-        >
-          <Heart className="size-4" />
-        </button>
+        <div className="absolute right-3 top-3">
+          <FavoriteButton listingId={id} title={title} />
+        </div>
       </div>
       <div className="p-4">
         <h2 className="font-semibold tracking-[-0.02em]">

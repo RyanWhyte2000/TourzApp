@@ -1,0 +1,17 @@
+import { CheckCircle2, ClipboardCheck, Eye, Settings2 } from "lucide-react";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
+import PageShell from "../../../PageShell";
+import { createAuthSupabaseClient } from "@/lib/supabase/auth-server";
+
+type DraftListing = { id: string; title: string; category: string; image_url: string; subtitle: string | null; price: number | string; price_suffix: string; description: string | null; status: string };
+export default async function HostListingPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const supabase = await createAuthSupabaseClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect(`/login?next=${encodeURIComponent(`/host/listings/${id}`)}`);
+  const { data, error } = await supabase.from("listings").select("id, title, category, image_url, subtitle, price, price_suffix, description, status").eq("id", id).eq("owner_id", user.id).maybeSingle();
+  if (error || !data) notFound();
+  const listing = data as DraftListing;
+  return <PageShell><main className="px-5 py-12 sm:px-8"><section className="mx-auto max-w-3xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg"><div className="bg-violet-700 px-7 py-9 text-center text-white"><CheckCircle2 className="mx-auto size-12" /><h1 className="mt-4 text-3xl font-bold">Draft listing created</h1><p className="mt-2 text-violet-100">Only you can see this listing until it is reviewed and published.</p></div><div className="p-6 sm:p-8"><div className="overflow-hidden rounded-2xl border border-slate-200"><div className="aspect-[2/1] bg-cover bg-center" style={{ backgroundImage: `url(${listing.image_url})` }} /><div className="p-5"><div className="flex items-center justify-between"><p className="text-xs font-bold uppercase tracking-wider text-violet-600">{listing.category}</p><span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold capitalize text-amber-700">{listing.status}</span></div><h2 className="mt-2 text-2xl font-bold">{listing.title}</h2><p className="mt-1 text-sm text-slate-500">{listing.subtitle}</p><p className="mt-4 text-xl font-bold">${Number(listing.price).toFixed(2)}<span className="text-sm font-medium text-slate-500">{listing.price_suffix}</span></p></div></div><div className="mt-6 grid gap-3 sm:grid-cols-3"><div className="rounded-xl bg-slate-50 p-4 text-sm"><ClipboardCheck className="size-5 text-violet-600" /><p className="mt-2 font-semibold">Draft saved</p><p className="mt-1 text-xs text-slate-500">Your information is secure.</p></div><div className="rounded-xl bg-slate-50 p-4 text-sm"><Eye className="size-5 text-violet-600" /><p className="mt-2 font-semibold">Review next</p><p className="mt-1 text-xs text-slate-500">Verify details before publishing.</p></div><div className="rounded-xl bg-slate-50 p-4 text-sm"><Settings2 className="size-5 text-violet-600" /><p className="mt-2 font-semibold">Host settings</p><p className="mt-1 text-xs text-slate-500">Configure policies and payouts.</p></div></div><div className="mt-6 flex flex-wrap gap-3"><Link href="/host/onboarding" className="flex h-11 items-center justify-center rounded-full border border-slate-200 px-5 text-sm font-semibold">Create another</Link><Link href="/settings#host" className="flex h-11 items-center justify-center rounded-full bg-violet-700 px-5 text-sm font-semibold text-white">Continue host setup</Link></div></div></section></main></PageShell>;
+}

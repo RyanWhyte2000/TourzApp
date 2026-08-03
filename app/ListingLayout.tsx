@@ -1,4 +1,3 @@
-import { ChevronDown, LayoutGrid, ListFilter, Map } from "lucide-react";
 import React from "react";
 import CategoryRail from "./CategoryRail";
 import type { CategoryRailItem } from "./CategoryRail";
@@ -6,6 +5,10 @@ import Filters from "./Filters";
 import ListingCard from "./ListingCard";
 import MobileFilters from "./MobileFilters";
 import Pagination from "./Pagination";
+import SortSelect from "./SortSelect";
+import ListingMap from "./ListingMap";
+import ViewSwitcher from "./ViewSwitcher";
+import type { MapListing } from "@/lib/listings/types";
 
 export type ListingItem = {
   id: string;
@@ -42,6 +45,8 @@ export type ListingSearchParams = {
   rail?: string | string[];
   page?: string | string[];
   pageSize?: string | string[];
+  sort?: string | string[];
+  view?: string | string[];
 };
 
 export type ListingCategory = "airbnb" | "hotel" | "food" | "transport";
@@ -112,6 +117,11 @@ export function searchLocation(search: ListingSearchParams) {
   return where?.trim() || "Montego Bay, Jamaica";
 }
 
+export function searchView(search: ListingSearchParams): "card" | "map" {
+  const view = Array.isArray(search.view) ? search.view[0] : search.view;
+  return view === "map" ? "map" : "card";
+}
+
 type ListingLayoutProps = {
   category: ListingCategory;
   resultCount: number;
@@ -120,6 +130,8 @@ type ListingLayoutProps = {
   items: ListingItem[];
   currentPage: number;
   pageSize: number;
+  mapItems: MapListing[];
+  view?: "card" | "map";
 };
 
 export default function ListingLayout({
@@ -130,6 +142,8 @@ export default function ListingLayout({
   items,
   currentPage,
   pageSize,
+  mapItems,
+  view = "card",
 }: ListingLayoutProps) {
   return (
     <div className="border-t border-slate-200/80 px-4 py-5 sm:px-7 lg:px-10">
@@ -140,26 +154,15 @@ export default function ListingLayout({
         </h1>
         <div className="flex flex-wrap items-center gap-2">
           <MobileFilters category={category} resultCount={resultCount} />
-          <button className="inline-flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 text-sm font-medium shadow-sm">
-            <ListFilter className="size-4" />
-            Latest
-            <ChevronDown className="size-4" />
-          </button>
-          <button className="hidden h-10 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 text-sm font-medium shadow-sm sm:inline-flex">
-            <Map className="size-4" />
-            Map View
-          </button>
-          <button className="inline-flex h-10 items-center gap-2 rounded-full border border-slate-300 bg-slate-50 px-4 text-sm font-semibold shadow-sm">
-            <LayoutGrid className="size-4" />
-            Card View
-          </button>
+          <SortSelect />
+          <ViewSwitcher view={view} />
         </div>
       </div>
 
       <CategoryRail categories={categories} />
 
-      <div className="mt-5 grid gap-7 lg:grid-cols-[1fr_360px]">
-        <section className="grid gap-5 sm:grid-cols-2">
+      <div className={`mt-5 grid gap-7 ${view === "map" ? "lg:grid-cols-[minmax(320px,0.72fr)_1.28fr]" : "lg:grid-cols-[1fr_360px]"}`}>
+        <section className={`grid gap-5 sm:grid-cols-2 ${view === "map" ? "order-2 lg:order-1 lg:max-h-[72vh] lg:grid-cols-1 lg:overflow-y-auto lg:pr-2" : ""}`}>
           {items.length > 0 ? (
             items.map((item) => (
               <ListingCard
@@ -177,14 +180,22 @@ export default function ListingLayout({
             </div>
           )}
         </section>
-        <Filters category={category} />
+        {view === "map" ? (
+          <div className="order-1 lg:order-2">
+            <ListingMap category={category} items={mapItems} />
+          </div>
+        ) : (
+          <Filters category={category} />
+        )}
       </div>
 
-      <Pagination
-        currentPage={currentPage}
-        pageSize={pageSize}
-        totalCount={resultCount}
-      />
+      {view === "card" && (
+        <Pagination
+          currentPage={currentPage}
+          pageSize={pageSize}
+          totalCount={resultCount}
+        />
+      )}
     </div>
   );
 }

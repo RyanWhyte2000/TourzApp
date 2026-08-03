@@ -1,7 +1,6 @@
 import {
   ArrowLeft,
   CheckCircle2,
-  Heart,
   MapPin,
   Share2,
   ShieldCheck,
@@ -9,6 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { ListingCategory, ListingItem } from "./ListingLayout";
+import FavoriteButton from "./FavoriteButton";
 
 const categoryNames: Record<ListingCategory, string> = {
   airbnb: "Airbnb",
@@ -49,9 +49,7 @@ export default function ListingDetail({
             <button type="button" className="inline-flex h-10 items-center gap-2 rounded-full border border-slate-200 px-4 text-sm font-medium">
               <Share2 className="size-4" /> Share
             </button>
-            <button type="button" className="inline-flex h-10 items-center gap-2 rounded-full border border-slate-200 px-4 text-sm font-medium">
-              <Heart className="size-4" /> Save
-            </button>
+            <FavoriteButton listingId={item.id} title={item.title} variant="label" />
           </div>
         </div>
 
@@ -138,9 +136,9 @@ export default function ListingDetail({
               </div>
             </div>
 
-            <button type="button" className="mt-5 h-12 w-full rounded-full bg-violet-700 px-5 text-sm font-semibold text-white transition hover:bg-violet-800">
+            <Link href={`/checkout/${category}/${item.id}`} className="mt-5 flex h-12 w-full items-center justify-center rounded-full bg-violet-700 px-5 text-sm font-semibold text-white transition hover:bg-violet-800">
               {actionLabels[category]}
-            </button>
+            </Link>
             <p className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-500">
               <ShieldCheck className="size-4" /> You won&apos;t be charged yet
             </p>
