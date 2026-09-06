@@ -16,6 +16,7 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
   const pathname = usePathname();
   const navigation = [
     { label: "Home", href: "/", icon: Home },
+    { label: "Plan a Trip", href: "/plan", icon: CarFront },
     { label: "Wishlist", href: "/wishlist", icon: Heart },
     { label: "About Us", href: "/about", icon: Info },
     { label: "Become a Host", href: "/become-a-host", icon: UsersRound },
@@ -37,17 +38,17 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
         Tourz
       </Link>
 
-      <nav className="hidden items-center gap-9 text-sm font-medium text-slate-700 md:flex">
+      <nav className="hidden items-center gap-4 text-sm font-medium text-slate-700 lg:flex xl:gap-7">
         {navigation.map((item) => <Link key={item.href} className="transition hover:text-slate-950" href={item.href}>{item.label}</Link>)}
       </nav>
 
-      <div className="hidden items-center gap-4 md:flex">
+      <div className="hidden items-center gap-4 lg:flex">
         <SupportChat />
         <NotificationBell />
         {authControl ?? <Link href="/login" className="flex size-10 items-center justify-center overflow-hidden rounded-full bg-slate-100"><UserRound className="size-5" /></Link>}
       </div>
 
-      <div className="flex items-center gap-2 md:hidden">
+      <div className="flex items-center gap-2 lg:hidden">
         {authControl ?? <Link href="/login" aria-label="Account" className="flex size-10 items-center justify-center rounded-full border border-slate-200"><UserRound className="size-5" /></Link>}
         <Link
           href="/wishlist"
