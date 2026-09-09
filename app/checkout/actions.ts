@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { reservationDates } from "@/lib/reservations/dates";
 import type { ListingCategory } from "../ListingLayout";
 import { createAuthSupabaseClient } from "@/lib/supabase/auth-server";
 
@@ -18,9 +19,9 @@ export async function createReservation(_: ReservationState, formData: FormData)
   if (!categories.includes(category) || !/^[a-zA-Z0-9_-]{1,100}$/.test(listingId)) return { error: "Invalid listing." };
   if (!startDate || !Number.isInteger(partySize) || partySize < 1 || partySize > 30) return { error: "Check your reservation details." };
 
-  const startsAt = new Date(`${startDate}T${category === "food" ? time : "15:00"}:00`);
-  const endsAt = endDate ? new Date(`${endDate}T${category === "transport" ? "10:00" : "11:00"}:00`) : null;
-  if (!Number.isFinite(startsAt.getTime()) || (endsAt && endsAt <= startsAt)) return { error: "The end date must be after the start date." };
+  const dates = reservationDates(category, startDate, endDate, time);
+  if (!dates) return { error: "Enter valid dates, with an end date after the start date for stays and transport." };
+  const { startsAt, endsAt } = dates;
   if (startsAt.getTime() < Date.now() - 86_400_000) return { error: "Choose a future date." };
 
   const supabase = await createAuthSupabaseClient();

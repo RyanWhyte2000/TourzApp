@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { safeNextPath } from "@/lib/auth/safe-next";
 import { redirect } from "next/navigation";
 import { createAuthSupabaseClient } from "@/lib/supabase/auth-server";
 
@@ -15,7 +16,7 @@ function credentials(formData: FormData) {
 
 function safeNext(formData: FormData, fallback = "/wishlist") {
   const requested = String(formData.get("next") ?? fallback);
-  return requested.startsWith("/") && !requested.startsWith("//") ? requested : fallback;
+  return safeNextPath(requested, fallback);
 }
 
 export async function login(_: AuthState, formData: FormData): Promise<AuthState> {
