@@ -17,6 +17,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import LocationAutocomplete from "./LocationAutocomplete";
 import SearchField from "./SearchField";
+import { categoryFeatureFlags, type FeatureCategory } from "@/lib/feature-flags";
 
 const tabs = [
   { href: "/transport", label: "Transport", icon: CarFront },
@@ -25,7 +26,9 @@ const tabs = [
   { href: "/hotel", label: "Hotel", icon: Hotel },
 ] as const;
 
-type Category = "transport" | "airbnb" | "food" | "hotel";
+type Category = FeatureCategory;
+
+const enabledTabs = tabs.filter((tab) => categoryFeatureFlags[tab.href.slice(1) as Category]);
 
 const categoryParams = [
   "where",
@@ -45,19 +48,24 @@ const categoryParams = [
 function SearchPanel({ onSearchComplete }: { onSearchComplete?: () => void }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const category: Category = pathname.startsWith("/transport")
+  const requestedCategory: Category = pathname.startsWith("/transport")
     ? "transport"
     : pathname.startsWith("/food")
       ? "food"
       : pathname.startsWith("/hotel")
         ? "hotel"
         : "airbnb";
+  const category = categoryFeatureFlags[requestedCategory]
+    ? requestedCategory
+    : enabledTabs[0]?.href.slice(1) as Category | undefined;
+
+  if (!category) return null;
 
   return (
     <section className="bg-slate-50 px-4 py-6 sm:px-7 lg:px-10 lg:py-8">
       <div className="mx-auto max-w-7xl rounded-[1.3rem] bg-white shadow-[0_18px_45px_rgba(15,23,42,0.05)]">
-        <div className="grid grid-cols-4 border-b border-slate-100 text-sm font-medium sm:w-105">
-          {tabs.map((tab) => {
+        <div className="grid auto-cols-fr grid-flow-col border-b border-slate-100 text-sm font-medium sm:w-105">
+          {enabledTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.href === `/${category}`;
             const location = searchParams.get("where") ?? searchParams.get("pickup");
@@ -142,7 +150,7 @@ function CategorySearchForm({
       if (value) params.set(name, value);
     });
 
-    const resultsPath = pathname === "/" ? "/" : `/${category}`;
+    const resultsPath = pathname === "/" && category === "airbnb" ? "/" : `/${category}`;
     router.push(`${resultsPath}?${params.toString()}`);
     onSearchComplete?.();
   }

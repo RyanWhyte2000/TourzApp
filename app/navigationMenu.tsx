@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 import SearchPanel from "./SearchPanel";
 import NotificationBell from "./NotificationBell";
 import SupportChat from "./SupportChat";
+import { categoryFeatureFlags, type FeatureCategory } from "@/lib/feature-flags";
 
 export default function NavigationMenuDemo({ authControl }: { authControl?: ReactNode }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -27,7 +28,7 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
     { label: "Hotels", href: "/hotel", icon: Building2 },
     { label: "Food", href: "/food", icon: UtensilsCrossed },
     { label: "Transport", href: "/transport", icon: CarFront },
-  ];
+  ].filter((item) => categoryFeatureFlags[item.href.slice(1) as FeatureCategory]);
 
   return (
     <header className="flex h-[72px] items-center justify-between border-b border-slate-200/80 bg-white px-5 sm:px-8 lg:px-10">
@@ -101,7 +102,7 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
                     return <Drawer.Close key={item.href} render={<Link href={item.href} />} className={`flex items-center gap-3 rounded-xl px-3 py-3.5 font-medium transition ${active ? "bg-violet-50 text-violet-700" : "text-slate-700 hover:bg-slate-50 hover:text-slate-950"}`}><Icon className="size-5" />{item.label}{active && <span className="ml-auto size-2 rounded-full bg-violet-600" />}</Drawer.Close>;
                   })}
                 </nav>
-                <div className="border-t border-slate-100 pt-5">
+                {categories.length > 0 && <div className="border-t border-slate-100 pt-5">
                   <p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Browse categories</p>
                   <div className="grid grid-cols-2 gap-2">
                     {categories.map((item) => {
@@ -109,7 +110,7 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
                       return <Drawer.Close key={item.href} render={<Link href={item.href} />} className="flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700"><Icon className="size-4" />{item.label}</Drawer.Close>;
                     })}
                   </div>
-                </div>
+                </div>}
                 <div className="mt-5 border-t border-slate-100 pt-5">
                   <SupportChat variant="menu" />
                   <p className="mt-2 text-center text-xs text-slate-400"><Store className="mr-1 inline size-3" />Travel support, right when you need it</p>
