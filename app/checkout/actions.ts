@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { reservationDates } from "@/lib/reservations/dates";
 import type { ListingCategory } from "../ListingLayout";
 import { createAuthSupabaseClient } from "@/lib/supabase/auth-server";
 
@@ -22,7 +23,7 @@ export async function createReservation(_: ReservationState, formData: FormData)
 
   const startsAt = new Date(`${startDate}T${category === "food" ? time : "15:00"}:00`);
   const endsAt = endDate ? new Date(`${endDate}T${category === "transport" ? "10:00" : "11:00"}:00`) : null;
-  if (!Number.isFinite(startsAt.getTime()) || (endsAt && (!Number.isFinite(endsAt.getTime()) || endsAt <= startsAt))) return { error: "The end date must be after the start date." };
+  if (!Number.isFinite(startsAt.getTime()) || (endsAt && endsAt <= startsAt)) return { error: "The end date must be after the start date." };
   if (startsAt.getTime() < Date.now() - 86_400_000) return { error: "Choose a future date." };
 
   const supabase = await createAuthSupabaseClient();
