@@ -161,8 +161,8 @@ export default function ListingLayout({
 
       <CategoryRail categories={categories} />
 
-      <div className={`mt-5 grid gap-7 ${view === "map" ? "lg:grid-cols-[minmax(320px,0.72fr)_1.28fr]" : "lg:grid-cols-[1fr_360px]"}`}>
-        <section className={`grid gap-5 sm:grid-cols-2 ${view === "map" ? "order-2 lg:order-1 lg:max-h-[72vh] lg:grid-cols-1 lg:overflow-y-auto lg:pr-2" : ""}`}>
+      <div className={`mt-5 grid items-start gap-7 ${view === "map" ? "lg:grid-cols-[minmax(320px,0.72fr)_1.28fr]" : "lg:grid-cols-[1fr_360px]"}`}>
+        <section className={`grid auto-rows-max content-start items-start gap-5 sm:grid-cols-2 ${view === "map" ? "order-2 lg:order-1 lg:max-h-[72vh] lg:grid-cols-1 lg:overflow-y-auto lg:pr-2" : ""}`}>
           {items.length > 0 ? (
             items.map((item) => (
               <ListingCard

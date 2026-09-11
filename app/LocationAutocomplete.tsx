@@ -58,7 +58,7 @@ export default function LocationAutocomplete({
   return (
     <div
       ref={containerRef}
-      className="relative flex min-h-20 items-center gap-3 px-5 py-4"
+      className="relative min-h-20 min-w-0 px-5 py-4"
       onBlur={(event) => {
         if (!containerRef.current?.contains(event.relatedTarget)) {
           setIsOpen(false);
@@ -66,11 +66,11 @@ export default function LocationAutocomplete({
         }
       }}
     >
-      <Map className="size-4 shrink-0 text-slate-900" aria-hidden="true" />
-      <div className="min-w-0 flex-1">
-        <label htmlFor={inputId} className="text-xs text-slate-500">
-          {label}
-        </label>
+      <label htmlFor={inputId} className="block text-xs leading-4 text-slate-500">
+        {label}
+      </label>
+      <div className="mt-1 flex min-w-0 items-center gap-3">
+        <Map className="size-4 shrink-0 text-slate-900" aria-hidden="true" />
         <input
           id={inputId}
           role="combobox"
@@ -108,7 +108,7 @@ export default function LocationAutocomplete({
               setActiveIndex(-1);
             }
           }}
-          className="mt-1 w-full bg-transparent text-sm font-semibold text-slate-900 outline-none placeholder:font-normal placeholder:text-slate-400"
+          className="min-w-0 w-full bg-transparent text-sm font-semibold text-slate-900 outline-none placeholder:font-normal placeholder:text-slate-400"
         />
       </div>
 

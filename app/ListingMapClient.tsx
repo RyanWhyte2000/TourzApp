@@ -8,6 +8,14 @@ import type { ListingCategory } from "./ListingLayout";
 import type { MapListing } from "@/lib/listings/types";
 
 const montegoBay: [number, number] = [18.4762, -77.8939];
+const configuredTileUrl = process.env.NEXT_PUBLIC_MAP_TILE_URL?.trim();
+const useDefaultTiles = !configuredTileUrl || configuredTileUrl.includes("your-provider");
+const tileUrl = useDefaultTiles
+  ? "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+  : configuredTileUrl;
+const attribution = useDefaultTiles
+  ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  : process.env.NEXT_PUBLIC_MAP_ATTRIBUTION?.trim() || "&copy; OpenStreetMap contributors";
 
 function FitListings({ items }: { items: MapListing[] }) {
   const map = useMap();
@@ -55,8 +63,8 @@ export default function ListingMapClient({
     <div className="sticky top-4 h-[65dvh] min-h-120 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm lg:h-[72vh]">
       <MapContainer center={montegoBay} zoom={12} scrollWheelZoom className="h-full w-full">
         <TileLayer
-          url={process.env.NEXT_PUBLIC_MAP_TILE_URL ?? "https://tile.openstreetmap.org/{z}/{x}/{y}.png"}
-          attribution={process.env.NEXT_PUBLIC_MAP_ATTRIBUTION ?? "&copy; OpenStreetMap contributors"}
+          url={tileUrl}
+          attribution={attribution}
         />
         <FitListings items={items} />
         {markers.map((item) => (
