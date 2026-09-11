@@ -23,6 +23,7 @@ export default async function AuthHeaderControl() {
       </div>
       <nav className="p-2 text-sm">
         <Link href="/profile" className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-50"><UserRound className="size-4" />Profile</Link>
+        <Link href="/host/profiles" className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-50"><HousePlus className="size-4" />Provider profile</Link>
         <Link href="/wishlist" className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-50"><Heart className="size-4" />Wishlist</Link>
         <Link href="/settings" className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-50"><Settings className="size-4" />Settings</Link>
         <Link href="/host/onboarding" className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-50"><HousePlus className="size-4" />Create a listing</Link>

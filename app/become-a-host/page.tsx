@@ -8,8 +8,8 @@ export default function BecomeAHostPage() {
   return <MarketingPage
     eyebrow="Host with Tourz"
     title="Turn what you offer into someone’s best trip"
-    description="List a home, hotel, restaurant, or transport service and connect with travelers looking for authentic, dependable experiences."
-    action={{ label: "Start listing", href: "/host/onboarding" }}
+    description="Join as a Driver, Hotel Owner, Car Rental Company, Airbnb Owner, or Restaurant Owner. Set up your dedicated profile and connect with travelers."
+    action={{ label: "Choose your provider type", href: "/host/profiles" }}
     features={[
       { icon: UsersRound, title: "Reach more travelers", description: "Put your offering in front of guests actively planning every part of their trip." },
       { icon: CalendarCheck, title: "Stay in control", description: "Manage availability, listing details, and upcoming requests from one account." },
