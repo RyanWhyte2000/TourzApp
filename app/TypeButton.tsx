@@ -18,7 +18,7 @@ function TypeButton({
       onClick={onClick}
       className={`flex h-20 flex-col items-start justify-center gap-2 rounded-xl border px-4 text-left text-sm font-semibold ${
         active
-          ? "border-violet-600 bg-violet-50 text-violet-700"
+          ? "border-emerald-600 bg-emerald-50 text-emerald-700"
           : "border-slate-200 bg-white"
       }`}
     >

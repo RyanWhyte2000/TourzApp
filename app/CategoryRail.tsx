@@ -81,7 +81,7 @@ function CategoryRail({ categories }: { categories: CategoryRailItem[] }) {
             onClick={() => selectCategory(category.label)}
             className={`inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${
               isActive
-                ? "border-violet-300 bg-violet-50 font-semibold text-violet-700"
+                ? "border-emerald-300 bg-emerald-50 font-semibold text-emerald-700"
                 : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
             }`}
           >

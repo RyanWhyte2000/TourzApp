@@ -23,7 +23,7 @@ function OptionRow({
             onClick={() => onChange(option)}
             className={`min-w-9 rounded-full border px-2 py-2 text-sm ${
               value === option
-                ? "border-violet-600 bg-violet-50 text-violet-700"
+                ? "border-emerald-600 bg-emerald-50 text-emerald-700"
                 : "border-slate-200"
             }`}
           >

@@ -24,11 +24,11 @@ export default async function PlannerPage({ searchParams }: { searchParams: Prom
   const generated = params.destination !== undefined;
   const categories = ["airbnb", "food", "transport"] as const;
   const results = generated ? await Promise.allSettled(categories.map(category => getListings({ category, search: { where: plan.destination, sort: "price_asc", pageSize: "6" } }))) : [];
-  const field = "mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal focus:outline-2 focus:outline-violet-600";
+  const field = "mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 font-normal focus:outline-2 focus:outline-emerald-600";
   return <PageShell>
     <div className="px-5 py-10 sm:px-8 lg:px-14">
       <div className="max-w-2xl">
-        <p className="text-sm font-bold uppercase tracking-widest text-violet-600">Free trip planner · No sign-up needed</p>
+        <p className="text-sm font-bold uppercase tracking-widest text-emerald-600">Free trip planner · No sign-up needed</p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">A little planning.<br />A lot to look forward to.</h1>
         <p className="mt-4 text-lg text-slate-600">Build a simple itinerary, work out your budget, and bring your friends along.</p>
       </div>
@@ -48,7 +48,7 @@ export default async function PlannerPage({ searchParams }: { searchParams: Prom
             <label className="text-sm font-semibold">Transport / group / day (USD)<input name="transport" type="number" min={0} max={10000} required defaultValue={plan.transport} className={field} /></label>
           </div>
         </fieldset>
-        <button className="mt-6 rounded-full bg-violet-600 px-6 py-3 font-semibold text-white hover:bg-violet-700">{generated ? "Update my plan" : "Plan your trip for free"}</button>
+        <button className="mt-6 rounded-full bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700">{generated ? "Update my plan" : "Plan your trip for free"}</button>
       </form>
       {!generated ? <p className="mt-8 text-slate-600">Your plan will include daily ideas, a group cost breakdown, and places to browse on Tourz.</p> : <div className="mt-10 grid items-start gap-8 lg:grid-cols-[1fr_340px]">
         <section>
@@ -57,7 +57,7 @@ export default async function PlannerPage({ searchParams }: { searchParams: Prom
           <PlanActions path={planPath(plan)} />
           <p className="mt-4 text-sm leading-6 text-slate-600">These flexible, self-guided ideas work as a starting point. Ask locally about access and opening hours; choose public places without admission charges. Meals and transport use your allowances below.</p>
           <div className="mt-6 space-y-4">{activities.slice(0, plan.days).map(([title, morning, evening], index) => <article key={title} className="rounded-2xl border border-slate-200 p-5">
-            <p className="text-sm font-bold text-violet-600">Day {index + 1}</p>
+            <p className="text-sm font-bold text-emerald-600">Day {index + 1}</p>
             <h3 className="mt-1 text-lg font-bold">{title}</h3>
             <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-600"><li><strong>Morning:</strong> {morning}</li><li><strong>Afternoon:</strong> Take a lunch break and explore nearby at your own pace. Food allowance: {money(plan.food)} per person for the day.</li><li><strong>Evening:</strong> {evening}</li></ul>
           </article>)}</div>
@@ -68,17 +68,17 @@ export default async function PlannerPage({ searchParams }: { searchParams: Prom
             const items = result?.status === "fulfilled" ? result.value.items.slice(0, 2) : [];
             const title = category === "airbnb" ? "Stays" : category === "food" ? "Food" : "Transport";
             return <article key={category} className="rounded-2xl border border-slate-200 p-5"><h3 className="font-bold">{title}</h3>
-              {items.length ? <ul className="mt-3 space-y-3">{items.map(item => <li key={item.id}><Link className="flex flex-wrap justify-between gap-2 text-sm text-violet-700 underline underline-offset-4" href={`/${category}/${item.id}`}><span>{item.title}</span><span>{item.price}{item.priceSuffix}</span></Link></li>)}</ul> : <p className="mt-2 text-sm text-slate-500">{result?.status === "rejected" ? "Listings are temporarily unavailable. Your itinerary and budget are still ready." : "No published matches for this destination yet."}</p>}
-              <Link className="mt-4 inline-block text-sm font-semibold text-violet-700" href={`/${category}?${new URLSearchParams({ where: plan.destination })}`}>Browse {title.toLowerCase()} →</Link>
+              {items.length ? <ul className="mt-3 space-y-3">{items.map(item => <li key={item.id}><Link className="flex flex-wrap justify-between gap-2 text-sm text-emerald-700 underline underline-offset-4" href={`/${category}/${item.id}`}><span>{item.title}</span><span>{item.price}{item.priceSuffix}</span></Link></li>)}</ul> : <p className="mt-2 text-sm text-slate-500">{result?.status === "rejected" ? "Listings are temporarily unavailable. Your itinerary and budget are still ready." : "No published matches for this destination yet."}</p>}
+              <Link className="mt-4 inline-block text-sm font-semibold text-emerald-700" href={`/${category}?${new URLSearchParams({ where: plan.destination })}`}>Browse {title.toLowerCase()} →</Link>
             </article>;
           })}</div>
         </section>
-        <aside className="rounded-2xl bg-violet-50 p-6 lg:sticky lg:top-6">
+        <aside className="rounded-2xl bg-emerald-50 p-6 lg:sticky lg:top-6">
           <h2 className="text-xl font-bold">Your estimated budget</h2>
           <p className="mt-1 text-sm text-slate-600">USD · Entire group</p>
           <dl className="mt-6 space-y-4 text-sm">
             {[[`Accommodation · ${estimate.nights} nights`, estimate.stay], [`Food · ${plan.days} days × ${plan.travelers} people`, estimate.food], [`Transport · ${plan.days} days`, estimate.transport], ["Self-guided activities", 0]].map(([label, value]) => <div key={label} className="flex justify-between gap-3"><dt>{label}</dt><dd className="font-semibold">{money(Number(value))}</dd></div>)}
-            <div className="flex justify-between border-t border-violet-200 pt-4 text-lg font-bold"><dt>Estimated total</dt><dd>{money(estimate.total)}</dd></div>
+            <div className="flex justify-between border-t border-emerald-200 pt-4 text-lg font-bold"><dt>Estimated total</dt><dd>{money(estimate.total)}</dd></div>
             <div className="flex justify-between"><dt>Per person</dt><dd>{money(estimate.total / plan.travelers)}</dd></div>
           </dl>
           <p className={`mt-5 rounded-xl p-3 text-sm font-semibold ${estimate.remaining >= 0 ? "bg-emerald-100 text-emerald-900" : "bg-amber-100 text-amber-900"}`}>{estimate.remaining >= 0 ? `${money(estimate.remaining)} left in your budget` : `${money(-estimate.remaining)} over budget — adjust your allowances or trip length.`}</p>

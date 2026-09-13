@@ -131,7 +131,7 @@ export default function LocationAutocomplete({
                 onMouseEnter={() => setActiveIndex(index)}
                 onClick={() => selectLocation(place.name)}
                 className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors ${
-                  activeIndex === index ? "bg-violet-50" : "hover:bg-slate-50"
+                  activeIndex === index ? "bg-emerald-50" : "hover:bg-slate-50"
                 }`}
               >
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600">

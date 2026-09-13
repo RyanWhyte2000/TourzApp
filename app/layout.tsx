@@ -3,8 +3,8 @@ import "./globals.css";
 import "leaflet/dist/leaflet.css";
 
 export const metadata: Metadata = {
-  title: "Tourz",
-  description: "A polished travel planner for stays, attractions, and rides.",
+  title: "Tourz | Experience Jamaica beyond the resort",
+  description: "Discover Jamaica with Tourz. Find island stays, local food, and transport, and build a free trip itinerary with a clear USD budget.",
 };
 
 export default function RootLayout({

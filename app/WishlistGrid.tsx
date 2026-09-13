@@ -67,7 +67,7 @@ export default function WishlistGrid() {
         </div>
         <h1 className="mt-5 text-2xl font-bold">Your wishlist is empty</h1>
         <p className="mx-auto mt-2 max-w-md text-slate-500">Tap the heart on any stay, hotel, restaurant, or ride to save it here.</p>
-        <Link href="/airbnb" className="mt-6 inline-flex rounded-full bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-700">
+        <Link href="/airbnb" className="mt-6 inline-flex rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700">
           Explore listings
         </Link>
       </section>
@@ -77,7 +77,7 @@ export default function WishlistGrid() {
   return (
     <section className="px-5 py-10 sm:px-8 lg:px-10">
       <div className="mb-7">
-        <p className="text-sm font-semibold text-violet-600">{ids.length} saved {ids.length === 1 ? "listing" : "listings"}</p>
+        <p className="text-sm font-semibold text-emerald-600">{ids.length} saved {ids.length === 1 ? "listing" : "listings"}</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">Your wishlist</h1>
       </div>
 

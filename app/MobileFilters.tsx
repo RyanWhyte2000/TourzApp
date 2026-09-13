@@ -36,7 +36,7 @@ export default function MobileFilters({
         <SlidersHorizontal className="size-4" />
         Filters
         {activeCount > 0 && (
-          <span className="flex size-5 items-center justify-center rounded-full bg-violet-700 text-xs font-semibold text-white">
+          <span className="flex size-5 items-center justify-center rounded-full bg-emerald-700 text-xs font-semibold text-white">
             {activeCount}
           </span>
         )}
@@ -62,7 +62,7 @@ export default function MobileFilters({
               />
             </div>
             <div className="border-t border-slate-100 bg-white p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-              <Drawer.Close className="h-12 w-full rounded-full bg-violet-700 px-5 text-sm font-semibold text-white transition hover:bg-violet-800">
+              <Drawer.Close className="h-12 w-full rounded-full bg-emerald-700 px-5 text-sm font-semibold text-white transition hover:bg-emerald-800">
                 Show {resultCount} {resultCount === 1 ? "result" : "results"}
               </Drawer.Close>
             </div>

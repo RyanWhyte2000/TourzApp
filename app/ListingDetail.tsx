@@ -11,7 +11,7 @@ import type { ListingCategory, ListingItem } from "./ListingLayout";
 import FavoriteButton from "./FavoriteButton";
 
 const categoryNames: Record<ListingCategory, string> = {
-  airbnb: "Airbnb",
+  airbnb: "Stay",
   hotel: "Hotel",
   food: "Restaurant",
   transport: "Transport",
@@ -64,7 +64,7 @@ export default function ListingDetail({
 
             <div className="mt-7 flex flex-col gap-5 border-b border-slate-100 pb-7 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-violet-700">
+                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-emerald-700">
                   {categoryNames[category]}
                 </p>
                 <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">
@@ -94,7 +94,7 @@ export default function ListingDetail({
             <section className="py-7">
               <h2 className="text-xl font-semibold">About this listing</h2>
               <p className="mt-3 max-w-3xl leading-7 text-slate-600">
-                Discover {item.title}, a highly rated {categoryNames[category].toLocaleLowerCase()} option near {location}.
+                Discover {item.title}, a {categoryNames[category].toLocaleLowerCase()} option near {location}.
                 Review the highlights below, confirm your travel details, and reserve when you are ready.
               </p>
 
@@ -104,13 +104,18 @@ export default function ListingDetail({
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     {features.map((feature) => (
                       <div key={feature} className="flex items-center gap-3 text-sm text-slate-700">
-                        <CheckCircle2 className="size-5 text-violet-600" />
+                        <CheckCircle2 className="size-5 text-emerald-600" />
                         {feature}
                       </div>
                     ))}
                   </div>
                 </>
               )}
+              <div className="mt-7 rounded-xl bg-emerald-50 p-5">
+                <h2 className="font-semibold">Before you reserve</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-600">Confirm {category === "transport" ? "pickup location, journey duration, luggage space, and what the fare includes" : category === "food" ? "opening times, dietary needs, child suitability, and what the price includes" : "check-in times, guest capacity, accessibility, and what your stay includes"} with the provider. Ask about cancellation terms and any extra charges before booking.</p>
+                <Link href="/help" className="mt-3 inline-block text-sm font-semibold text-emerald-800 underline">Questions about booking?</Link>
+              </div>
             </section>
           </div>
 
@@ -125,6 +130,7 @@ export default function ListingDetail({
               </span>
             </div>
 
+            <p className="mt-2 text-xs text-slate-500">Prices in USD · Review fees and your total at checkout.</p>
             <div className="mt-5 rounded-xl border border-slate-200 p-4 text-sm">
               <div className="flex justify-between gap-4">
                 <span className="text-slate-500">Estimated total</span>
@@ -132,11 +138,11 @@ export default function ListingDetail({
               </div>
               <div className="mt-3 flex justify-between gap-4 border-t border-slate-100 pt-3">
                 <span className="text-slate-500">Cancellation</span>
-                <span className="font-semibold text-emerald-700">Flexible</span>
+                <span className="font-semibold text-emerald-700">Confirm with provider</span>
               </div>
             </div>
 
-            <Link href={`/checkout/${category}/${item.id}`} className="mt-5 flex h-12 w-full items-center justify-center rounded-full bg-violet-700 px-5 text-sm font-semibold text-white transition hover:bg-violet-800">
+            <Link href={`/checkout/${category}/${item.id}`} className="mt-5 flex h-12 w-full items-center justify-center rounded-full bg-emerald-700 px-5 text-sm font-semibold text-white transition hover:bg-emerald-800">
               {actionLabels[category]}
             </Link>
             <p className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-500">

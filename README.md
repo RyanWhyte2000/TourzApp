@@ -10,6 +10,24 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 The migrations create and seed `public.listings`, enable row-level security, grant public read access only to published listings, and create the paginated `search_listings` database function used by the search and filter UI.
 
+## Provider profiles and driver dashboard
+
+Sign in and open `/host/profiles` to choose Driver, Hotel Owner, Car Rental Company, Airbnb Owner, or Restaurant Owner. Each account can save one provider type. Business details remain editable; the provider type cannot be changed through the app or public API. Traveler bookings remain available under `/profile`.
+
+Drivers can open `/driver` from the profile menu to manage services and bookings. Create a service through `/host/onboarding`, then publish, pause, or edit it in **My services**. Transport pricing uses the existing daily booking model. Earlier transport listings can be linked from the Driver profile.
+
+**Bookings** supports search, pickup-date and status filters, confirmation of pending bookings, starting and completing trips, and cancellation before a trip starts. Cancellation updates the traveler’s reservation; it does not process a refund. Dashboard service values exclude cancelled bookings and platform fees and are not payout balances. Times are displayed in `America/Jamaica`.
+
+The provider and dashboard migrations enforce account ownership and valid trip transitions. Drivers can update only booking status and trip progress, not prices or payment records. The SQL checks in `supabase/tests/` run within transactions and roll back all test fixtures. Application checks:
+
+```bash
+node_modules/.bin/jiti tests/provider-profiles.test.ts
+node_modules/.bin/jiti tests/driver-dashboard.test.ts
+node --test tests/bug-regressions.mjs
+npm run lint
+npm run build
+```
+
 ## Getting Started
 
 First, run the development server:

@@ -2,7 +2,7 @@
 
 import { Drawer } from "@base-ui/react/drawer";
 import Link from "next/link";
-import { BedDouble, Building2, CarFront, Heart, Home, Info, LifeBuoy, Menu, Search, ShieldCheck, Store, UserRound, UsersRound, UtensilsCrossed, X } from "lucide-react";
+import { BedDouble, CarFront, Heart, Home, Info, LifeBuoy, Menu, Search, Palmtree, Store, UserRound, UsersRound, UtensilsCrossed, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { ReactNode } from "react";
@@ -22,19 +22,19 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
     { label: "About Us", href: "/about", icon: Info },
     { label: "Become a Host", href: "/become-a-host", icon: UsersRound },
     { label: "Help Center", href: "/help", icon: LifeBuoy },
-  ];
+  ].filter((item) => pathname !== "/" || item.href !== "/wishlist");
   const categories = [
     { label: "Stays", href: "/airbnb", icon: BedDouble },
-    { label: "Hotels", href: "/hotel", icon: Building2 },
+    { label: "Local driver", href: "/local-driver", icon: UsersRound },
     { label: "Food", href: "/food", icon: UtensilsCrossed },
-    { label: "Transport", href: "/transport", icon: CarFront },
+    { label: "Car rentals", href: "/transport", icon: CarFront },
   ].filter((item) => categoryFeatureFlags[item.href.slice(1) as FeatureCategory]);
 
   return (
     <header className="flex h-[72px] items-center justify-between border-b border-slate-200/80 bg-white px-5 sm:px-8 lg:px-10">
       <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-[-0.04em]">
-        <span className="flex size-7 items-center justify-center rounded-md bg-slate-950 text-white">
-          <ShieldCheck className="size-4 fill-white/10" />
+        <span className="flex size-7 items-center justify-center rounded-md bg-emerald-900 text-white">
+          <Palmtree className="size-5" />
         </span>
         Tourz
       </Link>
@@ -51,13 +51,13 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
 
       <div className="flex items-center gap-2 lg:hidden">
         {authControl ?? <Link href="/login" aria-label="Account" className="flex size-10 items-center justify-center rounded-full border border-slate-200"><UserRound className="size-5" /></Link>}
-        <Link
+        {pathname !== "/" && <Link
           href="/wishlist"
           aria-label="Open wishlist"
           className="flex size-10 items-center justify-center rounded-full border border-slate-200 transition hover:bg-slate-50"
         >
           <Heart className="size-5" />
-        </Link>
+        </Link>}
         <Drawer.Root open={isSearchOpen} onOpenChange={setIsSearchOpen}>
           <Drawer.Trigger
             aria-label="Open search"
@@ -99,7 +99,7 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
                   {navigation.map((item) => {
                     const Icon = item.icon;
                     const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-                    return <Drawer.Close key={item.href} render={<Link href={item.href} />} className={`flex items-center gap-3 rounded-xl px-3 py-3.5 font-medium transition ${active ? "bg-violet-50 text-violet-700" : "text-slate-700 hover:bg-slate-50 hover:text-slate-950"}`}><Icon className="size-5" />{item.label}{active && <span className="ml-auto size-2 rounded-full bg-violet-600" />}</Drawer.Close>;
+                    return <Drawer.Close key={item.href} render={<Link href={item.href} />} className={`flex items-center gap-3 rounded-xl px-3 py-3.5 font-medium transition ${active ? "bg-emerald-50 text-emerald-700" : "text-slate-700 hover:bg-slate-50 hover:text-slate-950"}`}><Icon className="size-5" />{item.label}{active && <span className="ml-auto size-2 rounded-full bg-emerald-600" />}</Drawer.Close>;
                   })}
                 </nav>
                 {categories.length > 0 && <div className="border-t border-slate-100 pt-5">
@@ -107,7 +107,7 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
                   <div className="grid grid-cols-2 gap-2">
                     {categories.map((item) => {
                       const Icon = item.icon;
-                      return <Drawer.Close key={item.href} render={<Link href={item.href} />} className="flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-700"><Icon className="size-4" />{item.label}</Drawer.Close>;
+                      return <Drawer.Close key={item.href} render={<Link href={item.href} />} className="flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700"><Icon className="size-4" />{item.label}</Drawer.Close>;
                     })}
                   </div>
                 </div>}

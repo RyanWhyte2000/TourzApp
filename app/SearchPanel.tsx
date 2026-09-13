@@ -7,7 +7,6 @@ import {
   Clock,
   Hamburger,
   Home,
-  Hotel,
   MapPin,
   Search,
   UserRound,
@@ -20,15 +19,15 @@ import SearchField from "./SearchField";
 import { categoryFeatureFlags, type FeatureCategory } from "@/lib/feature-flags";
 
 const tabs = [
-  { href: "/transport", label: "Transport", icon: CarFront },
-  { href: "/airbnb", label: "AirBnb", icon: Home },
+  { href: "/transport", label: "Car rental", icon: CarFront },
+  { href: "/airbnb", label: "Stays", icon: Home },
   { href: "/food", label: "Food", icon: Hamburger },
-  { href: "/hotel", label: "Hotel", icon: Hotel },
+  { href: "/local-driver", label: "Local driver", icon: UserRound },
 ] as const;
 
 type Category = FeatureCategory;
 
-const enabledTabs = tabs.filter((tab) => categoryFeatureFlags[tab.href.slice(1) as Category]);
+const enabledTabs = tabs.filter((tab) => tab.href === "/local-driver" || categoryFeatureFlags[tab.href.slice(1) as Category]);
 
 const categoryParams = [
   "where",
@@ -48,7 +47,7 @@ const categoryParams = [
 function SearchPanel({ onSearchComplete }: { onSearchComplete?: () => void }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const requestedCategory: Category = pathname.startsWith("/transport")
+  const requestedCategory: Category = pathname.startsWith("/transport") || pathname.startsWith("/local-driver")
     ? "transport"
     : pathname.startsWith("/food")
       ? "food"
@@ -67,7 +66,7 @@ function SearchPanel({ onSearchComplete }: { onSearchComplete?: () => void }) {
         <div className="grid auto-cols-fr grid-flow-col border-b border-slate-100 text-sm font-medium sm:w-105">
           {enabledTabs.map((tab) => {
             const Icon = tab.icon;
-            const isActive = tab.href === `/${category}`;
+            const isActive = tab.href === pathname;
             const location = searchParams.get("where") ?? searchParams.get("pickup");
             const href = location
               ? `${tab.href}?${new URLSearchParams({ where: location })}`
@@ -78,7 +77,7 @@ function SearchPanel({ onSearchComplete }: { onSearchComplete?: () => void }) {
                 key={tab.href}
                 href={href}
                 className={`flex h-12 items-center justify-center gap-2 border-r border-slate-100 last:border-r-0 ${
-                  isActive ? "bg-violet-50 text-violet-700" : "text-slate-700"
+                  isActive ? "bg-emerald-50 text-emerald-700" : "text-slate-700"
                 }`}
               >
                 <Icon className="size-4" />
@@ -106,7 +105,6 @@ function CategorySearchForm({
   onSearchComplete?: () => void;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const defaultLocation = searchParams.get("where") ?? "Montego Bay, Jamaica";
   const [where, setWhere] = useState(defaultLocation);
@@ -150,7 +148,7 @@ function CategorySearchForm({
       if (value) params.set(name, value);
     });
 
-    const resultsPath = pathname === "/" && category === "airbnb" ? "/" : `/${category}`;
+    const resultsPath = `/${category}`;
     router.push(`${resultsPath}?${params.toString()}`);
     onSearchComplete?.();
   }
@@ -235,7 +233,7 @@ function CategorySearchForm({
 
       <button
         type="submit"
-        className="m-3 inline-flex h-14 items-center justify-center gap-2 rounded-r-[1rem] bg-violet-700 px-7 text-sm font-semibold text-white transition hover:bg-violet-800 lg:m-0 lg:h-auto lg:rounded-r-[1.3rem]"
+        className="m-3 inline-flex h-14 items-center justify-center gap-2 rounded-r-[1rem] bg-emerald-700 px-7 text-sm font-semibold text-white transition hover:bg-emerald-800 lg:m-0 lg:h-auto lg:rounded-r-[1.3rem]"
       >
         {category === "transport" ? <MapPin className="size-4" /> : <Search className="size-4" />}
         Search

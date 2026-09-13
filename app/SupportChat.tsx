@@ -46,8 +46,8 @@ export default function SupportChat({ variant = "header" }: { variant?: "header"
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger className={variant === "menu" ? "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 text-sm font-semibold text-white transition hover:bg-violet-700" : "inline-flex h-10 items-center gap-2 rounded-full border border-violet-200 bg-white px-3 text-sm font-semibold shadow-sm transition hover:bg-violet-50"}>
-        <span className="flex size-7 items-center justify-center rounded-full bg-violet-600 text-white"><Bot className="size-4" /></span>
+      <Dialog.Trigger className={variant === "menu" ? "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 text-sm font-semibold text-white transition hover:bg-emerald-700" : "inline-flex h-10 items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 text-sm font-semibold shadow-sm transition hover:bg-emerald-50"}>
+        <span className="flex size-7 items-center justify-center rounded-full bg-emerald-600 text-white"><Bot className="size-4" /></span>
         Support
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -56,7 +56,7 @@ export default function SupportChat({ variant = "header" }: { variant?: "header"
           <Dialog.Popup className="flex h-[min(42rem,92dvh)] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl transition duration-200 data-[ending-style]:translate-y-4 data-[ending-style]:opacity-0 data-[starting-style]:translate-y-4 data-[starting-style]:opacity-0 sm:rounded-3xl">
             <header className="flex items-center justify-between bg-slate-950 px-5 py-4 text-white">
               <div className="flex items-center gap-3">
-                <span className="relative flex size-10 items-center justify-center rounded-full bg-violet-600"><Bot className="size-5" /><span className="absolute bottom-0 right-0 size-3 rounded-full border-2 border-slate-950 bg-emerald-400" /></span>
+                <span className="relative flex size-10 items-center justify-center rounded-full bg-emerald-600"><Bot className="size-5" /><span className="absolute bottom-0 right-0 size-3 rounded-full border-2 border-slate-950 bg-emerald-400" /></span>
                 <div><Dialog.Title className="font-semibold">Tourz Support</Dialog.Title><Dialog.Description className="text-xs text-slate-300">Automated help · replies instantly</Dialog.Description></div>
               </div>
               <Dialog.Close aria-label="Close support chat" className="flex size-9 items-center justify-center rounded-full bg-white/10 hover:bg-white/20"><X className="size-5" /></Dialog.Close>
@@ -65,7 +65,7 @@ export default function SupportChat({ variant = "header" }: { variant?: "header"
             <div aria-live="polite" className="flex-1 space-y-3 overflow-y-auto bg-slate-50 p-5">
               {messages.map((message) => (
                 <div key={message.id} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
-                  <p className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.sender === "user" ? "rounded-br-md bg-violet-600 text-white" : "rounded-bl-md border border-slate-200 bg-white text-slate-700"}`}>{message.text}</p>
+                  <p className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.sender === "user" ? "rounded-br-md bg-emerald-600 text-white" : "rounded-bl-md border border-slate-200 bg-white text-slate-700"}`}>{message.text}</p>
                 </div>
               ))}
               {typing && <div className="flex justify-start"><span className="rounded-2xl rounded-bl-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-400">Typing…</span></div>}
@@ -73,13 +73,13 @@ export default function SupportChat({ variant = "header" }: { variant?: "header"
 
             <div className="border-t border-slate-200 bg-white p-4">
               <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
-                {quickReplies.map((item) => <button key={item.label} type="button" disabled={typing} onClick={() => addExchange(item.message, item.response)} className="shrink-0 rounded-full border border-violet-200 px-3 py-1.5 text-xs font-semibold text-violet-700 hover:bg-violet-50 disabled:opacity-50">{item.label}</button>)}
+                {quickReplies.map((item) => <button key={item.label} type="button" disabled={typing} onClick={() => addExchange(item.message, item.response)} className="shrink-0 rounded-full border border-emerald-200 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 disabled:opacity-50">{item.label}</button>)}
               </div>
               <form onSubmit={submit} className="flex gap-2">
-                <input name="message" required disabled={typing} aria-label="Message support" placeholder="Type your question…" className="h-11 min-w-0 flex-1 rounded-full border border-slate-200 px-4 text-sm outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-100" />
-                <button disabled={typing} aria-label="Send message" className="flex size-11 shrink-0 items-center justify-center rounded-full bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-50"><Send className="size-4" /></button>
+                <input name="message" required disabled={typing} aria-label="Message support" placeholder="Type your question…" className="h-11 min-w-0 flex-1 rounded-full border border-slate-200 px-4 text-sm outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100" />
+                <button disabled={typing} aria-label="Send message" className="flex size-11 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"><Send className="size-4" /></button>
               </form>
-              <Link href="/help" onClick={() => setOpen(false)} className="mx-auto mt-3 flex w-fit items-center gap-1 text-xs font-medium text-slate-500 hover:text-violet-700">Visit the Help Center <ExternalLink className="size-3" /></Link>
+              <Link href="/help" onClick={() => setOpen(false)} className="mx-auto mt-3 flex w-fit items-center gap-1 text-xs font-medium text-slate-500 hover:text-emerald-700">Visit the Help Center <ExternalLink className="size-3" /></Link>
             </div>
           </Dialog.Popup>
         </Dialog.Viewport>

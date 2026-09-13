@@ -78,7 +78,7 @@ export default function Pagination({
               onClick={() => navigate(page)}
               className={`size-9 rounded-full text-sm ${
                 safePage === page
-                  ? "bg-violet-700 font-semibold text-white"
+                  ? "bg-emerald-700 font-semibold text-white"
                   : "text-slate-600 hover:bg-slate-100"
               }`}
             >
@@ -105,7 +105,7 @@ export default function Pagination({
         <select
           value={pageSize}
           onChange={(event) => navigate(1, Number(event.target.value))}
-          className="h-9 rounded-full border border-slate-200 bg-white px-3 font-medium outline-none focus:border-violet-500"
+          className="h-9 rounded-full border border-slate-200 bg-white px-3 font-medium outline-none focus:border-emerald-500"
         >
           {pageSizes.map((size) => <option key={size} value={size}>{size}</option>)}
         </select>

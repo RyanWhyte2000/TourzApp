@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function PlanActions({ path }: { path: string }) {
   const [message, setMessage] = useState("");
   const [manualLink, setManualLink] = useState("");
-  const button = "rounded-full border border-violet-200 px-4 py-2 text-sm font-semibold text-violet-800 hover:bg-violet-100";
+  const button = "rounded-full border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-100";
   async function copy() {
     const url = new URL(path, window.location.origin).href;
     try {

@@ -13,6 +13,8 @@ export type ListingRow = {
   filter_tags: string[];
   filter_values: Record<string, number>;
   meta: { label: string }[];
+  provider_profile_id?: string | null;
+  provider_name?: string | null;
 };
 
 export type ListingQuery = {

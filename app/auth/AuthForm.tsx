@@ -31,16 +31,16 @@ export default function AuthForm({
             type={field.type ?? "text"}
             autoComplete={field.autoComplete}
             required
-            className="mt-1.5 h-12 w-full rounded-xl border border-slate-200 bg-white px-4 outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+            className="mt-1.5 h-12 w-full rounded-xl border border-slate-200 bg-white px-4 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
           />
         </label>
       ))}
       {state?.error && <p role="alert" className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700">{state.error}</p>}
       {state?.success && <p role="status" className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700">{state.success}</p>}
-      <button disabled={pending} className="h-12 w-full rounded-xl bg-violet-600 font-semibold text-white transition hover:bg-violet-700 disabled:opacity-60">
+      <button disabled={pending} className="h-12 w-full rounded-xl bg-emerald-600 font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-60">
         {pending ? "Please wait…" : submitLabel}
       </button>
-      {footer && <p className="text-center text-sm text-slate-500">{footer.text} <Link className="font-semibold text-violet-700" href={footer.href}>{footer.label}</Link></p>}
+      {footer && <p className="text-center text-sm text-slate-500">{footer.text} <Link className="font-semibold text-emerald-700" href={footer.href}>{footer.label}</Link></p>}
     </form>
   );
 }

@@ -27,7 +27,7 @@ export default function SortSelect() {
   }
 
   return (
-    <label className="relative inline-flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-white pl-4 shadow-sm focus-within:border-violet-500">
+    <label className="relative inline-flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-white pl-4 shadow-sm focus-within:border-emerald-500">
       <ListFilter className="size-4 shrink-0" />
       <span className="sr-only">Sort listings</span>
       <select

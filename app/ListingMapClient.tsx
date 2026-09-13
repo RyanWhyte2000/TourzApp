@@ -83,7 +83,7 @@ export default function ListingMapClient({
                   <span className="font-bold">${item.price}</span>
                   <span>★ {item.rating.toFixed(1)}</span>
                 </div>
-                <Link href={`/${category}/${item.id}`} className="mt-3 block rounded-full bg-violet-700 px-4 py-2 text-center text-sm font-semibold text-white">
+                <Link href={`/${category}/${item.id}`} className="mt-3 block rounded-full bg-emerald-700 px-4 py-2 text-center text-sm font-semibold text-white">
                   View details
                 </Link>
               </div>

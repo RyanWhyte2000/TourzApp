@@ -7,13 +7,14 @@ export default async function AuthHeaderControl() {
   const supabase = await createAuthSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return <Link href="/login" aria-label="Sign in" title="Sign in" className="flex size-10 items-center justify-center rounded-full bg-slate-950 text-white transition hover:bg-slate-800"><UserRound className="size-5" /></Link>;
+  const { data: provider } = await supabase.from("provider_profiles").select("provider_type").eq("user_id", user.id).maybeSingle();
 
   const name = typeof user.user_metadata.full_name === "string" ? user.user_metadata.full_name : "Traveler";
   const initials = name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 
   return <details className="group relative">
-    <summary aria-label="Open profile menu" className="flex cursor-pointer list-none items-center gap-1 rounded-full outline-none ring-violet-200 focus-visible:ring-4 [&::-webkit-details-marker]:hidden">
-      <span title={user.email} className="flex size-10 items-center justify-center rounded-full bg-violet-100 text-sm font-bold text-violet-700">{initials || <UserRound className="size-5" />}</span>
+    <summary aria-label="Open profile menu" className="flex cursor-pointer list-none items-center gap-1 rounded-full outline-none ring-emerald-200 focus-visible:ring-4 [&::-webkit-details-marker]:hidden">
+      <span title={user.email} className="flex size-10 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">{initials || <UserRound className="size-5" />}</span>
       <ChevronDown className="hidden size-4 text-slate-500 transition group-open:rotate-180 lg:block" />
     </summary>
     <div className="absolute right-0 z-40 mt-3 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
@@ -22,6 +23,7 @@ export default async function AuthHeaderControl() {
         <p className="truncate text-xs text-slate-500">{user.email}</p>
       </div>
       <nav className="p-2 text-sm">
+        {provider?.provider_type === "driver" && <Link href="/driver" className="flex items-center gap-3 rounded-xl bg-emerald-50 px-3 py-2.5 font-semibold text-emerald-700"><HousePlus className="size-4" />Driver dashboard</Link>}
         <Link href="/profile" className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-50"><UserRound className="size-4" />Profile</Link>
         <Link href="/host/profiles" className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-50"><HousePlus className="size-4" />Provider profile</Link>
         <Link href="/wishlist" className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-50"><Heart className="size-4" />Wishlist</Link>

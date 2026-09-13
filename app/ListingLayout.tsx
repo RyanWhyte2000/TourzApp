@@ -20,6 +20,8 @@ export type ListingItem = {
   meta?: { icon: React.ReactNode; label: string }[];
   priceSuffix?: string;
   totalPrice?: string;
+  providerName?: string;
+  providerLabel?: string;
   filterTags?: string[];
   filterValues?: Record<string, number>;
 };
@@ -132,6 +134,7 @@ type ListingLayoutProps = {
   pageSize: number;
   mapItems: MapListing[];
   view?: "card" | "map";
+  heading?: string;
 };
 
 export default function ListingLayout({
@@ -144,12 +147,15 @@ export default function ListingLayout({
   pageSize,
   mapItems,
   view = "card",
+  heading,
 }: ListingLayoutProps) {
   return (
     <div className="border-t border-slate-200/80 px-4 py-5 sm:px-7 lg:px-10">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <h1 className="text-lg font-medium tracking-[-0.03em] sm:text-xl">
-          Found {resultCount} results near{" "}
+          {heading ?? `Found ${resultCount} results near `}
+          {!heading && " "}
+          {heading && " "}
           <span className="font-semibold">{location}</span>
         </h1>
         <div className="flex flex-wrap items-center gap-2">
@@ -168,6 +174,7 @@ export default function ListingLayout({
               <ListingCard
                 key={item.id}
                 {...item}
+                category={category}
                 href={`/${category}/${item.id}`}
               />
             ))

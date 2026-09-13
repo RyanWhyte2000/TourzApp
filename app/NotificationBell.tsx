@@ -98,7 +98,7 @@ export default function NotificationBell() {
               <p className="text-xs text-slate-500">{unreadCount ? `${unreadCount} unread` : "You’re all caught up"}</p>
             </div>
             {unreadCount > 0 && (
-              <button type="button" onClick={() => saveRead(notifications.map(({ id }) => id))} className="inline-flex items-center gap-1.5 text-xs font-semibold text-violet-700 hover:text-violet-900">
+              <button type="button" onClick={() => saveRead(notifications.map(({ id }) => id))} className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-900">
                 <CheckCheck className="size-4" /> Mark all read
               </button>
             )}
@@ -107,10 +107,10 @@ export default function NotificationBell() {
             {notifications.map(({ id, title, description, time, href, icon: Icon }) => {
               const unread = !readIds.includes(id);
               return (
-                <Link key={id} href={href} onClick={() => { markRead(id); setOpen(false); }} className={`flex gap-3 rounded-xl p-3 transition hover:bg-slate-50 ${unread ? "bg-violet-50/60" : ""}`}>
-                  <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-violet-700 shadow-sm"><Icon className="size-4" /></span>
+                <Link key={id} href={href} onClick={() => { markRead(id); setOpen(false); }} className={`flex gap-3 rounded-xl p-3 transition hover:bg-slate-50 ${unread ? "bg-emerald-50/60" : ""}`}>
+                  <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-emerald-700 shadow-sm"><Icon className="size-4" /></span>
                   <span className="min-w-0 flex-1">
-                    <span className="flex items-start gap-2"><span className="flex-1 text-sm font-semibold">{title}</span>{unread && <span className="mt-1.5 size-2 shrink-0 rounded-full bg-violet-600" />}</span>
+                    <span className="flex items-start gap-2"><span className="flex-1 text-sm font-semibold">{title}</span>{unread && <span className="mt-1.5 size-2 shrink-0 rounded-full bg-emerald-600" />}</span>
                     <span className="mt-0.5 block text-xs leading-5 text-slate-500">{description}</span>
                     <span className="mt-1 block text-[11px] font-medium text-slate-400">{time}</span>
                   </span>

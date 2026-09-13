@@ -21,7 +21,7 @@ function CheckRow({
       />
       <span
         className={`mt-0.5 flex size-5 items-center justify-center rounded border ${
-          checked ? "border-violet-600 bg-violet-600 text-white" : "border-slate-200"
+          checked ? "border-emerald-600 bg-emerald-600 text-white" : "border-slate-200"
         }`}
       >
         {checked && <Check className="size-3.5" />}

@@ -66,7 +66,7 @@ function MobilePreview() {
         <Menu className="size-5" />
       </div>
       <div className="p-4">
-        <button className="mb-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-violet-700 py-3 text-sm font-semibold text-white">
+        <button className="mb-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-700 py-3 text-sm font-semibold text-white">
           <Sparkles className="size-4" />
           Supporty
         </button>

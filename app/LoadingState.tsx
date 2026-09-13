@@ -10,7 +10,7 @@ export default function LoadingState({ compact = false }: { compact?: boolean })
         </header>
         {!compact && <div className="hidden border-b border-slate-100 p-7 md:block"><div className="h-24 animate-pulse rounded-2xl bg-slate-100" /></div>}
         <div className="px-5 py-10 sm:px-8 lg:px-10">
-          <div className="h-4 w-28 animate-pulse rounded bg-violet-100" />
+          <div className="h-4 w-28 animate-pulse rounded bg-emerald-100" />
           <div className="mt-4 h-9 w-64 max-w-full animate-pulse rounded-lg bg-slate-200" />
           <div className="mt-3 h-4 w-96 max-w-full animate-pulse rounded bg-slate-100" />
           <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -9,10 +9,13 @@ export default function ListingCard({
   image,
   price,
   rating,
-  subtitle = "2464 Royal Ln. Mesa, New Jersey 45463",
+  subtitle = "Location details to be confirmed",
   meta,
   priceSuffix = "/night",
-  totalPrice = "$12,400/total",
+  totalPrice,
+  providerName,
+  providerLabel,
+  category,
   href,
 }: {
   id: string;
@@ -24,6 +27,9 @@ export default function ListingCard({
   meta?: { icon: React.ReactNode; label: string }[];
   priceSuffix?: string;
   totalPrice?: string;
+  providerName?: string;
+  providerLabel?: string;
+  category?: string;
   href: string;
 }) {
   return (
@@ -45,9 +51,9 @@ export default function ListingCard({
       </div>
       <div className="p-4">
         <h2 className="font-semibold tracking-[-0.02em]">
-          <Link href={href} className="hover:text-violet-700">{title}</Link>
+          <Link href={href} className="hover:text-emerald-700">{title}</Link>
         </h2>
-        <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
+        <p className="mt-1 text-sm text-slate-500">{category === "transport" ? `${providerLabel ?? "Rental company"}: ${providerName ?? "Island Drive Jamaica"}` : subtitle}</p>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           {meta && meta.length > 0 && (
             <div className="flex items-center gap-4 text-sm text-slate-600">
@@ -60,9 +66,9 @@ export default function ListingCard({
             </div>
           )}
           <div className="text-right">
-            <span className="text-base font-bold">{price}</span>
-            <span className="text-sm font-medium">{priceSuffix}</span>
-            <p className="text-xs font-medium text-slate-500 underline">{totalPrice}</p>
+            <span className="text-base font-bold">{price} <span className="text-xs font-medium text-slate-500">USD</span></span>
+            <span className="text-sm font-medium">{category === "transport" ? "/day" : priceSuffix}</span>
+            {totalPrice && <p className="text-xs font-medium text-slate-500 underline">{totalPrice}</p>}
           </div>
         </div>
       </div>

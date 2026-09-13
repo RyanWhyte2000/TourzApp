@@ -61,6 +61,7 @@ function toListingItem(row: ListingRow): ListingItem {
     subtitle: row.subtitle ?? undefined,
     priceSuffix: row.price_suffix,
     totalPrice: row.total_price ?? undefined,
+    providerName: row.provider_name ?? undefined,
     filterTags: row.filter_tags ?? [],
     filterValues: row.filter_values ?? {},
     meta: (row.meta ?? []).map(({ label }) => ({ label, icon: iconForMeta(label) })),
@@ -109,8 +110,16 @@ export async function getListings({ category, search = {} }: ListingQuery) {
     mapItems?: import("./types").MapListing[];
     totalCount?: number;
   } | null;
+  const rows = result?.items ?? [];
+  const providerIds = [...new Set(rows.map(row => row.provider_profile_id).filter((id): id is string => Boolean(id)))];
+  const providerNames = providerIds.length
+    ? await supabase.rpc("get_public_provider_names", { p_ids: providerIds })
+    : { data: [], error: null };
+  if (providerNames.error) throw new Error(`Unable to load provider names: ${providerNames.error.message}`);
+  const names = new Map<string, string>((providerNames.data ?? []).map((provider: { id: string; display_name: string }) => [provider.id, provider.display_name] as [string, string]));
+  const items = rows.map(row => toListingItem({ ...row, provider_name: row.provider_profile_id ? names.get(row.provider_profile_id) ?? null : null }));
   return {
-    items: (result?.items ?? []).map(toListingItem),
+    items,
     totalCount: Number(result?.totalCount ?? 0),
     page,
     pageSize,
