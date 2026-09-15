@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import NavigationMenuDemo from "./navigationMenu";
 import SearchPanel from "./SearchPanel";
 import AuthHeaderControl from "./AuthHeaderControl";
+import SupportChat from "./SupportChat";
 
 export default function PageShell({ children, showSearch = true }: { children: React.ReactNode; showSearch?: boolean }) {
   return (
@@ -15,6 +16,7 @@ export default function PageShell({ children, showSearch = true }: { children: R
         </div>}
         {children}
       </section>
+      <SupportChat variant="floating" />
     </main>
   );
 }

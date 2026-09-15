@@ -272,7 +272,7 @@ function Filters({
       </div>
 
       <div className="space-y-6 p-5">
-        <section>
+        {category !== "food" && <section>
           <h3 className="font-semibold">{config.priceTitle}</h3>
           <p className="mt-1 text-sm text-slate-500">{config.priceCopy}</p>
           <DebouncedPriceRange
@@ -290,7 +290,7 @@ function Filters({
               navigate(params);
             }}
           />
-        </section>
+        </section>}
 
         {config.sections.map((section) => (
           <section key={section.title} className="border-t border-slate-100 pt-5">

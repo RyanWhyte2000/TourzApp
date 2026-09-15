@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { consistentFetch } from "./consistent-fetch";
 
 function credentials() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -13,6 +14,7 @@ export async function createAuthSupabaseClient() {
   const { url, key } = credentials();
 
   return createServerClient(url, key, {
+    global: { fetch: consistentFetch },
     cookies: {
       getAll: () => cookieStore.getAll(),
       setAll: (values) => {

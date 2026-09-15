@@ -7,7 +7,7 @@ import { createReservation } from "./actions";
 
 const today = new Date().toISOString().slice(0, 10);
 
-export default function CheckoutForm({ listing }: { listing: { id: string; category: ListingCategory; title: string; price: number; priceSuffix: string } }) {
+export default function CheckoutForm({ listing, attemptId }: { attemptId: string; listing: { id: string; category: ListingCategory; title: string; price: number; priceSuffix: string } }) {
   const [state, action, pending] = useActionState(createReservation, undefined);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -24,6 +24,7 @@ export default function CheckoutForm({ listing }: { listing: { id: string; categ
   const money = (value: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
 
   return <form action={action} className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_360px]">
+    <input type="hidden" name="attemptId" value={attemptId} />
     <input type="hidden" name="listingId" value={listing.id} /><input type="hidden" name="category" value={listing.category} />
     <div className="space-y-6">
       <section className="rounded-2xl border border-slate-200 bg-white p-6">
@@ -41,8 +42,7 @@ export default function CheckoutForm({ listing }: { listing: { id: string; categ
       </section>
     </div>
     <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-6 shadow-lg lg:sticky lg:top-6">
-      <h2 className="text-lg font-bold">Price details (USD)</h2>
-      <div className="mt-5 space-y-3 text-sm"><div className="flex justify-between"><span>{money(listing.price)} × {units} {isFood ? (units === 1 ? "guest" : "guests") : (units === 1 ? "day/night" : "days/nights")}</span><span>{money(subtotal)}</span></div><div className="flex justify-between"><span>Service fee</span><span>{money(fee)}</span></div><div className="flex justify-between border-t border-slate-200 pt-4 text-base font-bold"><span>Total</span><span>{money(subtotal + fee)}</span></div></div>
+      {isFood ? <><h2 className="text-lg font-bold">Reservation request</h2><p className="mt-5 text-sm leading-6 text-slate-600">No price is shown for restaurant listings. Confirm the menu and payment arrangements directly with the restaurant.</p></> : <><h2 className="text-lg font-bold">Price details (USD)</h2><div className="mt-5 space-y-3 text-sm"><div className="flex justify-between"><span>{money(listing.price)} × {units} {units === 1 ? "day/night" : "days/nights"}</span><span>{money(subtotal)}</span></div><div className="flex justify-between"><span>Service fee</span><span>{money(fee)}</span></div><div className="flex justify-between border-t border-slate-200 pt-4 text-base font-bold"><span>Total</span><span>{money(subtotal + fee)}</span></div></div></>}
       {state?.error && <p role="alert" className="mt-4 rounded-xl bg-rose-50 p-3 text-sm text-rose-700">{state.error}</p>}
       <button disabled={pending} className="mt-5 h-12 w-full rounded-full bg-emerald-700 font-semibold text-white hover:bg-emerald-800 disabled:opacity-60">{pending ? "Confirming…" : "Confirm reservation"}</button>
       <p className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-500"><ShieldCheck className="size-4" />No payment is taken today</p>

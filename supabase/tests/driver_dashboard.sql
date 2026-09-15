@@ -87,8 +87,8 @@ end $$;
 select set_config('request.jwt.claim.sub', (select user_id::text from driver_test_accounts where kind = 'car_rental'), true);
 do $$
 begin
-  if exists (select 1 from public.reservations where id in (select id from driver_test_bookings)) then
-    raise exception 'Non-driver provider received driver dashboard permissions';
+  if (select count(*) from public.reservations where id in (select id from driver_test_bookings)) <> 1 then
+    raise exception 'Rental provider must see only its own booking';
   end if;
 end $$;
 

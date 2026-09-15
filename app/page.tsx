@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Compass, MapPin, Palmtree, UtensilsCrossed, Waves, Mountain, Sparkles, Wallet, Heart } from "lucide-react";
+import { ArrowRight, Compass, MapPin, Palmtree, UtensilsCrossed, Waves, Mountain, CarFront, Wallet, Heart } from "lucide-react";
 import PageShell from "./PageShell";
 import JamaicaSlideshow from "./JamaicaSlideshow";
 import { categoryFeatureFlags } from "@/lib/feature-flags";
@@ -8,8 +8,8 @@ import styles from "./home.module.css";
 const experiences = [
   { id: "beach", icon: Waves, title: "Beach & relaxation", description: "Salt in the air. Nowhere to rush. Make room for a slower kind of day.", detail: "Build a beach day around your stay. Ask your host about nearby beach access, entry fees, and the best time to go.", destination: "Negril, Jamaica", color: "ocean", image: "photo-1507525428034-b723cf961d3e" },
   { id: "culture", icon: UtensilsCrossed, title: "Food & culture", description: "Follow your curiosity, from a local kitchen to the rhythm of the streets.", detail: "Leave time for local food and conversation. Check menus, dietary options, and opening hours before heading out.", destination: "Kingston, Jamaica", color: "gold", image: "photo-1658833608786-22c4b4a621de" },
-  { id: "adventure", icon: Mountain, title: "Adventure", description: "Trade your usual view for green hills and a little sense of wonder.", detail: "Plan time outdoors, then confirm transport, access, fitness requirements, and any guide or admission costs locally.", destination: "Ocho Rios, Jamaica", color: "green", image: "photo-1469474968028-56623f02e42e" },
-  { id: "discovery", icon: Sparkles, title: "Hidden gems", description: "Take the scenic route. Leave a little space for a local recommendation.", detail: "Ask your host for a favourite nearby spot. Check the journey time and return transport before adding it to your day.", destination: "Port Antonio, Jamaica", color: "clay", image: "photo-1510414842594-a61c69b5ae57" },
+  { id: "adventure", icon: Mountain, title: "Adventure", description: "Take a Local Driver into the green hills and find a little sense of wonder.", detail: "Plan time outdoors with a Local Driver, then confirm access, fitness requirements, and any guide or admission costs locally.", destination: "Ocho Rios, Jamaica", color: "green", image: "photo-1469474968028-56623f02e42e" },
+  { id: "car-rental", icon: CarFront, title: "Car rental", description: "Explore Jamaica at your own pace. Find a car for your island adventure.", color: "clay", image: "photo-1549317661-bd32c8ce0db2" },
 ];
 const faqs = [
   ["Can I arrange pickup from my hotel?", "Browse transport options and enter your pickup and drop-off locations. Confirm the exact meeting point, pickup time, luggage space, and any additional charges with the provider. Hotel pickup is not automatically included."],
@@ -48,7 +48,16 @@ export default function HomePage() {
         <section id="experiences" className={styles.section}>
           <div className={styles.sectionHeading}><div><p className={styles.kicker}>One island. So many ways to feel it.</p><h2>What brings you to Jamaica?</h2></div><p>Start with a feeling.<br />We’ll help you make a plan.</p></div>
           <div className={styles.experienceGrid}>
-            {experiences.map(({ id, icon: Icon, title, description, color, image }, index) => <a href={`#${id}`} className={`${styles.experienceCard} ${styles[color]}`} style={{ backgroundImage: `linear-gradient(180deg, rgba(12, 43, 35, .18), rgba(12, 43, 35, .84)), url(https://images.unsplash.com/${image}?auto=format&fit=crop&w=900&q=80)` }} key={id}><div className={styles.cardTop}><Icon size={34} strokeWidth={1.3} /><span>0{index + 1}</span></div><h3>{title}</h3><p>{description}</p><span className={styles.cardAction}>Find your inspiration <ArrowRight size={18} /></span></a>)}
+            {experiences.map(({ id, icon: Icon, title, description, color, image }, index) => {
+              const action = id === "beach"
+                ? { label: "Browse stays", href: "/airbnb" }
+                : id === "culture"
+                  ? { label: "Explore local food", href: "/food" }
+                  : id === "adventure"
+                    ? { label: "Find a Local Driver", href: "/local-driver" }
+                    : { label: "Browse car rentals", href: "/transport" };
+              return <Link href={action.href} className={`${styles.experienceCard} ${styles[color]}`} style={{ backgroundImage: `linear-gradient(180deg, rgba(12, 43, 35, .18), rgba(12, 43, 35, .84)), url(https://images.unsplash.com/${image}?auto=format&fit=crop&w=900&q=80)` }} key={id}><div className={styles.cardTop}><Icon size={34} strokeWidth={1.3} /><span>0{index + 1}</span></div><h3>{title}</h3><p>{description}</p><span className={styles.cardAction}>{action.label} <ArrowRight size={18} /></span></Link>;
+            })}
           </div>
         </section>
 
@@ -56,8 +65,6 @@ export default function HomePage() {
           <div><p className={styles.kicker}>From first idea to island time</p><h2>Your Jamaica starts here.</h2><p className={styles.bodyCopy}>Find a place to call home, something good to eat, and a way to get there.</p></div>
           <div><form action="/plan" className={styles.destinationForm}><label htmlFor="destination">Where are you staying?</label><div><select id="destination" name="destination" defaultValue="Montego Bay, Jamaica">{["Montego Bay", "Negril", "Ocho Rios", "Kingston", "Port Antonio"].map(place => <option key={place} value={`${place}, Jamaica`}>{place}</option>)}</select><button type="submit">Plan nearby <ArrowRight size={17} /></button></div><p>Start a free itinerary with a budget you can adjust.</p></form><div className={styles.browseLinks}>{browseLinks.filter(link => link.key === "local-driver" || categoryFeatureFlags[link.key]).map(link => <Link key={link.key} href={link.href}>{link.label} <ArrowRight size={14} /></Link>)}</div></div>
         </section>
-
-        <section className={styles.section} aria-labelledby="inspiration-title"><p className={styles.kicker}>A little inspiration</p><h2 id="inspiration-title">Less rushing. More discovering.</h2><div className={styles.ideaGrid}>{experiences.map(({ id, icon: Icon, title, detail, destination }) => <article id={id} key={id} className={styles.idea}><Icon size={23} /><div><h3>{title}</h3><p>{detail}</p><Link href={`/plan?${new URLSearchParams({ destination })}`}>Plan time in {destination.replace(", Jamaica", "")} <ArrowRight size={15} /></Link></div></article>)}</div><p className={styles.note}>Ideas to shape your itinerary. Guided activities and attraction tickets are not booked through these plans.</p></section>
 
         <section className={styles.planBanner}><Compass size={48} strokeWidth={1.2} /><div><p className={styles.kicker}>Your pace. Your people. Your plan.</p><h2>A little planning. A lot of Jamaica.</h2><p>Daily ideas, a simple group budget, and an itinerary to share.</p></div><Link href="/plan" className={styles.primary}>Plan my trip for free <ArrowRight size={17} /></Link></section>
 

@@ -7,7 +7,7 @@ import DriverDashboard from "./DriverDashboard";
 export const metadata = { title: "Driver Dashboard | Tourz" };
 
 export default async function DriverDashboardPage() {
-  const { supabase, user, profile, error, loadedAt } = await getDriverAccount();
+  const { supabase, user, profile, profiles, error, loadedAt } = await getDriverAccount();
   if (!user) redirect("/login?next=/driver");
   if (error) throw new Error("Unable to load your driver profile. Please try again.");
   if (!profile) redirect("/host/profiles/driver");
@@ -17,5 +17,5 @@ export default async function DriverDashboardPage() {
     supabase.from("reservations").select("id, listing_id, starts_at, ends_at, party_size, subtotal, status, payment_status, driver_status, notes, listings!inner(title, provider_profile_id)").eq("listings.provider_profile_id", profile.id).order("starts_at", { ascending: true }),
   ]);
   if (servicesResult.error || bookingsResult.error) throw new Error("Unable to load your driver dashboard. Please try again.");
-  return <PageShell showSearch={false}><DriverDashboard profile={profile} services={(servicesResult.data ?? []) as DriverService[]} bookings={(bookingsResult.data ?? []) as unknown as DriverBooking[]} now={loadedAt} /></PageShell>;
+  return <PageShell showSearch={false}><DriverDashboard profiles={profiles} profile={profile} services={(servicesResult.data ?? []) as DriverService[]} bookings={(bookingsResult.data ?? []) as unknown as DriverBooking[]} now={loadedAt} /></PageShell>;
 }

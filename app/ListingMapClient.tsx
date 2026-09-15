@@ -55,8 +55,8 @@ export default function ListingMapClient({
   items: MapListing[];
 }) {
   const markers = useMemo(
-    () => items.map((item) => ({ ...item, icon: priceIcon(item.price) })),
-    [items],
+    () => items.map((item) => ({ ...item, icon: category === "food" ? undefined : priceIcon(item.price) })),
+    [category, items],
   );
 
   return (
@@ -80,7 +80,7 @@ export default function ListingMapClient({
                 <p className="mt-3 font-semibold text-slate-950">{item.title}</p>
                 <p className="mt-1 text-xs text-slate-500">{item.subtitle}</p>
                 <div className="mt-3 flex items-center justify-between text-sm">
-                  <span className="font-bold">${item.price}</span>
+                  {category !== "food" && <span className="font-bold">${item.price}</span>}
                   <span>★ {item.rating.toFixed(1)}</span>
                 </div>
                 <Link href={`/${category}/${item.id}`} className="mt-3 block rounded-full bg-emerald-700 px-4 py-2 text-center text-sm font-semibold text-white">

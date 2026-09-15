@@ -30,7 +30,7 @@ export const dashboardDefinitions: Record<ProviderType, DashboardDefinition> = {
     { name: "beds", label: "Beds", min: 1, max: 100, initial: 1 },
     { name: "bathrooms", label: "Bathrooms", min: 0, max: 50, initial: 1 },
   ] },
-  restaurant_owner: { title: "Restaurant", listings: "Dining listings", singular: "dining listing", add: "Add dining listing", start: "Reservation time", end: null, startAction: "Seat party", completeAction: "Complete dining", activeLabel: "Seated", completedLabel: "Finished", upcomingLabel: "Upcoming reservations", party: "diner", parties: "diners", priceLabel: "Price per person (USD)", fields: [
+  restaurant_owner: { title: "Restaurant", listings: "Dining listings", singular: "dining listing", add: "Add dining listing", start: "Reservation time", end: null, startAction: "Seat party", completeAction: "Complete dining", activeLabel: "Seated", completedLabel: "Finished", upcomingLabel: "Upcoming reservations", party: "diner", parties: "diners", priceLabel: "", fields: [
     { name: "partySize", label: "Maximum party size", min: 1, max: 100, initial: 2 },
   ] },
 };
@@ -51,9 +51,9 @@ export function bookingLabel(booking: DashboardBooking, type: ProviderType) {
 export function parseProviderListing(form: FormData, type: ProviderType) {
   const text = (key: string) => String(form.get(key) ?? "").trim();
   const title = text("title"), description = text("description"), subtitle = text("subtitle"), image_url = text("image_url");
-  const price = Number(form.get("price"));
+  const price = providerDefinitions[type].category === "food" ? 0 : Number(form.get("price"));
   if (title.length < 5 || title.length > 160 || description.length < 30 || description.length > 3000 || subtitle.length < 3 || subtitle.length > 200) return { error: "Complete the title, description, and location." } as const;
-  if (!Number.isFinite(price) || price <= 0 || price > 1_000_000) return { error: "Enter a valid price." } as const;
+  if (providerDefinitions[type].category !== "food" && (!Number.isFinite(price) || price <= 0 || price > 1_000_000)) return { error: "Enter a valid price." } as const;
   try { if (!["http:", "https:"].includes(new URL(image_url).protocol) || image_url.length > 1000) throw new Error(); } catch { return { error: "Enter a valid HTTP or HTTPS image URL." } as const; }
   const filter_values: Record<string, number> = {};
   for (const field of dashboardDefinitions[type].fields) {
@@ -63,6 +63,6 @@ export function parseProviderListing(form: FormData, type: ProviderType) {
     filter_values[field.name] = value;
   }
   const category = providerDefinitions[type].category;
-  const price_suffix = category === "food" ? "/person" : category === "transport" ? "/day" : "/night";
+  const price_suffix = category === "food" ? "" : category === "transport" ? "/day" : "/night";
   return { data: { title, description, subtitle, image_url, price, price_suffix, filter_values } } as const;
 }

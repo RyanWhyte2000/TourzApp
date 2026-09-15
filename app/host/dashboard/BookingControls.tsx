@@ -15,6 +15,7 @@ export default function BookingControls({ booking, type }: { booking: DashboardB
   const canCancel = Boolean(bookingTransition(booking, "cancel"));
   if (!canAdvance && !canCancel) return null;
   return <form action={action} className="mt-4 border-t border-slate-100 pt-4">
+    <input type="hidden" name="provider_type" value={type} />
     <input type="hidden" name="booking_id" value={booking.id} />
     <div className="flex flex-wrap items-center gap-3">
       {canAdvance && <button name="action" value={next} disabled={pending} className="rounded-full bg-emerald-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">{pending ? "Updating…" : label}</button>}

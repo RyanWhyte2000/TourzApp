@@ -65,3 +65,8 @@ export type ProviderListing = {
   price_suffix: string;
   provider_profile_id: string | null;
 };
+
+export function selectProviderProfile(profiles: ProviderProfile[], type?: ProviderType) {
+  return type ? profiles.find((profile) => profile.provider_type === type) ?? null
+    : profiles.length === 1 ? profiles[0] : null;
+}

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { parseProviderProfile } from "../lib/providers/validation";
-import { providerTypes } from "../lib/providers/types";
+import { selectProviderProfile, type ProviderProfile, providerTypes } from "../lib/providers/types";
 
 function form(type: string) {
   const data = new FormData();
@@ -53,4 +53,13 @@ test("contact validation rejects invalid email, unsafe website schemes, and over
   assert.equal(parseProviderProfile(data).error, undefined);
   data.set("cuisine", "x".repeat(301));
   assert.ok(parseProviderProfile(data).error);
+});
+
+ test("profile selection requires a category when an account has multiple businesses", () => {
+  const profiles = providerTypes.map((provider_type) => ({ id: provider_type, provider_type })) as ProviderProfile[];
+  assert.equal(selectProviderProfile(profiles), null);
+  for (const profile of profiles) assert.equal(selectProviderProfile(profiles, profile.provider_type), profile);
+  assert.equal(selectProviderProfile([profiles[0]]), profiles[0]);
+  assert.equal(selectProviderProfile([profiles[0]], "hotel_owner"), null);
+  assert.equal(selectProviderProfile([]), null);
 });

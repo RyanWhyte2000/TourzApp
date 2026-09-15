@@ -2,6 +2,7 @@
 
 import { ListFilter } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type { ListingCategory } from "./ListingLayout";
 
 const sortOptions = [
   { value: "latest", label: "Latest" },
@@ -11,7 +12,7 @@ const sortOptions = [
   { value: "price_desc", label: "Price: high to low" },
 ];
 
-export default function SortSelect() {
+export default function SortSelect({ category }: { category?: ListingCategory }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -35,7 +36,7 @@ export default function SortSelect() {
         onChange={(event) => changeSort(event.target.value)}
         className="h-full appearance-none rounded-r-full bg-transparent py-0 pl-0 pr-8 text-sm font-medium outline-none"
       >
-        {sortOptions.map((option) => (
+        {sortOptions.filter((option) => category !== "food" || !option.value.startsWith("price_")).map((option) => (
           <option key={option.value} value={option.value}>{option.label}</option>
         ))}
       </select>

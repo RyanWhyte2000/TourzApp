@@ -2,6 +2,7 @@
 
 import { CalendarDays, CarFront, CheckCircle2, ChevronRight, CircleDollarSign, Clock3, LayoutDashboard, MapPin, Plus, Search, Settings2, Users } from "lucide-react";
 import Link from "next/link";
+import DashboardSwitcher from "../host/dashboard/DashboardSwitcher";
 import { useState } from "react";
 import type { ProviderProfile } from "@/lib/providers/types";
 import { driverSummary, type DriverBooking, type DriverService } from "@/lib/driver/types";
@@ -32,7 +33,7 @@ function BookingCard({ booking }: { booking: DriverBooking }) {
   </article>;
 }
 
-export default function DriverDashboard({ profile, services, bookings, now }: { profile: ProviderProfile; services: DriverService[]; bookings: DriverBooking[]; now: number }) {
+export default function DriverDashboard({ profile, profiles = [profile], services, bookings, now }: { profile: ProviderProfile; profiles?: ProviderProfile[]; services: DriverService[]; bookings: DriverBooking[]; now: number }) {
   const [tab, setTab] = useState<"overview" | "bookings" | "services">("overview");
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
@@ -56,7 +57,8 @@ export default function DriverDashboard({ profile, services, bookings, now }: { 
       <div className="mt-8 hidden rounded-2xl border border-slate-200 bg-white p-4 lg:block"><p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Your base</p><p className="mt-2 flex items-start gap-2 text-sm font-medium"><MapPin className="mt-0.5 size-4 shrink-0 text-emerald-600" />{profile.location}</p><p className="mt-3 text-xs text-slate-500">{liveServices} live {liveServices === 1 ? "service" : "services"}</p></div>
     </aside>
     <main className="min-w-0 bg-[#fafbfe] p-5 sm:p-8">
-      <header className="flex flex-wrap items-center justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-600">Tourz for drivers</p><h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">{tab === "overview" ? `Welcome, ${profile.display_name}` : tab === "bookings" ? "Your bookings" : "Your driving services"}</h1><p className="mt-2 text-sm text-slate-500">{tab === "services" ? "Manage service details and availability for new bookings." : "Manage your work in one place. Times shown in Jamaica (UTC−5)."}</p></div><Link href="/host/onboarding" className="inline-flex shrink-0 items-center gap-2 rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800"><Plus className="size-4" />Add service</Link></header>
+      <DashboardSwitcher profiles={profiles} current={"driver"} />
+      <header className="flex flex-wrap items-center justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-600">Tourz for drivers</p><h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">{tab === "overview" ? `Welcome, ${profile.display_name}` : tab === "bookings" ? "Your bookings" : "Your driving services"}</h1><p className="mt-2 text-sm text-slate-500">{tab === "services" ? "Manage service details and availability for new bookings." : "Manage your work in one place. Times shown in Jamaica (UTC−5)."}</p></div><Link href="/host/onboarding?provider_type=driver" className="inline-flex shrink-0 items-center gap-2 rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800"><Plus className="size-4" />Add service</Link></header>
 
       {tab === "overview" && <>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{[
@@ -83,7 +85,7 @@ export default function DriverDashboard({ profile, services, bookings, now }: { 
       {tab === "services" && <section className="mt-7">
         <div className="flex flex-wrap gap-3 text-sm text-slate-500"><span>{services.length} total</span><span>·</span><span>{liveServices} live</span><span>·</span><span>{services.filter((service) => service.status === "draft").length} drafts</span></div>
         <div className="mt-5 grid auto-rows-max items-start gap-5 xl:grid-cols-2">{services.map((service) => <article key={service.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white"><div className="aspect-[2.5/1] bg-slate-100 bg-cover bg-center" style={{ backgroundImage: `url(${service.image_url})` }} /><div className="p-5"><div className="flex items-start justify-between gap-3"><h2 className="text-lg font-bold">{service.title}</h2><span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${service.status === "published" ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>{service.status === "published" ? "Live" : service.status === "archived" ? "Paused" : "Draft"}</span></div><p className="mt-2 text-sm text-slate-500">{service.subtitle}</p><div className="mt-4 flex items-center justify-between gap-3"><p className="font-bold">{money(service.price)}<span className="text-sm font-normal text-slate-400">{service.price_suffix}</span></p><p className="text-sm text-slate-500">{service.filter_values.seats ?? 1} seats</p></div>{service.status === "published" && <Link href={`/transport/${service.id}`} className="mt-4 inline-block text-sm font-semibold text-emerald-700">View public listing →</Link>}<ServiceEditor service={service} /></div></article>)}</div>
-        {!services.length && <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center"><CarFront className="mx-auto size-8 text-slate-300" /><h2 className="mt-4 font-bold">Create your first driving service</h2><p className="mt-2 text-sm text-slate-500">Add your service, daily price, and passenger capacity, then publish when ready.</p><Link href="/host/onboarding" className="mt-5 inline-block rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white">Add service</Link></div>}
+        {!services.length && <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center"><CarFront className="mx-auto size-8 text-slate-300" /><h2 className="mt-4 font-bold">Create your first driving service</h2><p className="mt-2 text-sm text-slate-500">Add your service, daily price, and passenger capacity, then publish when ready.</p><Link href="/host/onboarding?provider_type=driver" className="mt-5 inline-block rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white">Add service</Link></div>}
         <Link href="/host/profiles/driver" className="mt-6 inline-block text-sm font-semibold text-emerald-700">Link an earlier transport listing from your profile →</Link>
       </section>}
     </main>

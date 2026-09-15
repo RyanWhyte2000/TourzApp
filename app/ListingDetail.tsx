@@ -20,7 +20,7 @@ const categoryNames: Record<ListingCategory, string> = {
 const actionLabels: Record<ListingCategory, string> = {
   airbnb: "Reserve stay",
   hotel: "Reserve room",
-  food: "Reserve table",
+  food: "Reserve a spot",
   transport: "Reserve vehicle",
 };
 
@@ -113,7 +113,7 @@ export default function ListingDetail({
               )}
               <div className="mt-7 rounded-xl bg-emerald-50 p-5">
                 <h2 className="font-semibold">Before you reserve</h2>
-                <p className="mt-2 text-sm leading-6 text-slate-600">Confirm {category === "transport" ? "pickup location, journey duration, luggage space, and what the fare includes" : category === "food" ? "opening times, dietary needs, child suitability, and what the price includes" : "check-in times, guest capacity, accessibility, and what your stay includes"} with the provider. Ask about cancellation terms and any extra charges before booking.</p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">Confirm {category === "transport" ? "pickup location, journey duration, luggage space, and what the fare includes" : category === "food" ? "opening times, dietary needs, and child suitability" : "check-in times, guest capacity, accessibility, and what your stay includes"} with the provider. Ask about cancellation terms and any extra charges before booking.</p>
                 <Link href="/help" className="mt-3 inline-block text-sm font-semibold text-emerald-800 underline">Questions about booking?</Link>
               </div>
             </section>
@@ -122,19 +122,18 @@ export default function ListingDetail({
           <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)] lg:sticky lg:top-6">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <span className="text-2xl font-bold">{item.price}</span>
-                <span className="text-sm font-medium text-slate-500">{item.priceSuffix ?? "/night"}</span>
+                {category !== "food" && <><span className="text-2xl font-bold">{item.price}</span><span className="text-sm font-medium text-slate-500">{item.priceSuffix ?? "/night"}</span></>}
               </div>
               <span className="inline-flex items-center gap-1 text-sm font-semibold">
                 <Star className="size-4 fill-amber-400 text-amber-400" /> {item.rating}
               </span>
             </div>
 
-            <p className="mt-2 text-xs text-slate-500">Prices in USD · Review fees and your total at checkout.</p>
+            {category !== "food" && <p className="mt-2 text-xs text-slate-500">Prices in USD · Review fees and your total at checkout.</p>}
             <div className="mt-5 rounded-xl border border-slate-200 p-4 text-sm">
               <div className="flex justify-between gap-4">
-                <span className="text-slate-500">Estimated total</span>
-                <span className="font-semibold">{item.totalPrice ?? item.price}</span>
+                <span className="text-slate-500">{category === "food" ? "Payment" : "Estimated total"}</span>
+                <span className="font-semibold">{category === "food" ? "Arrange with provider" : item.totalPrice ?? item.price}</span>
               </div>
               <div className="mt-3 flex justify-between gap-4 border-t border-slate-100 pt-3">
                 <span className="text-slate-500">Cancellation</span>

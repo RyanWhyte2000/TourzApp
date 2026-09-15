@@ -26,8 +26,8 @@ begin
     end if;
     begin
       insert into public.provider_profiles(user_id, provider_type, display_name, location)
-      values (fixture.user_id, case when fixture.provider_type = 'driver' then 'car_rental' else 'driver' end, 'Second business', 'Montego Bay');
-      raise exception 'Second profile incorrectly allowed';
+      values (fixture.user_id, fixture.provider_type, 'Second business', 'Montego Bay');
+      raise exception 'Duplicate category incorrectly allowed';
     exception when unique_violation then null;
     end;
     begin
@@ -81,5 +81,5 @@ begin
   end;
 end $$;
 reset role;
-select 'Passed: five provider types, owner CRUD permissions, one profile per account, immutable type, listing ownership/category, anonymous access' as result;
+select 'Passed: five provider types, owner CRUD permissions, one profile per category, immutable type, listing ownership/category, anonymous access' as result;
 rollback;

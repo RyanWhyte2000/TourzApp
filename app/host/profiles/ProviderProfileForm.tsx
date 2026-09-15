@@ -12,7 +12,7 @@ export default function ProviderProfileForm({ type, profile }: { type: ProviderT
   return <form action={action} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
     <input type="hidden" name="provider_type" value={type} />
     <h2 className="text-xl font-bold">{profile ? "Profile details" : "Set up your profile"}</h2>
-    <p className="mt-2 text-sm text-slate-500">{profile ? "Update your business information below." : "Your account can have one provider type. Saving this profile sets your account’s provider type."}</p>
+    <p className="mt-2 text-sm text-slate-500">{profile ? "Update your business information below." : "Add this provider category to your account. Each category can have multiple listings."}</p>
     <div className="mt-6 grid gap-5 sm:grid-cols-2">
       <label className="text-sm font-medium">{definition.nameLabel}<input name="display_name" required minLength={2} maxLength={160} defaultValue={profile?.display_name} className={inputClass} /></label>
       <label className="text-sm font-medium">Location or service area<input name="location" required minLength={2} maxLength={200} defaultValue={profile?.location} placeholder="Montego Bay, Jamaica" className={inputClass} /></label>

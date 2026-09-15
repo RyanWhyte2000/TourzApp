@@ -94,13 +94,13 @@ export async function getListings({ category, search = {} }: ListingQuery) {
     p_category: category,
     p_destination: location,
     p_tags: tags,
-    p_min_price: numberFrom(search.minPrice) ?? null,
-    p_max_price: numberFrom(search.maxPrice) ?? null,
+    p_min_price: category === "food" ? null : numberFrom(search.minPrice) ?? null,
+    p_max_price: category === "food" ? null : numberFrom(search.maxPrice) ?? null,
     p_min_rating: numberFrom(search.minRating) ?? null,
     p_numeric_filters: numericFilters,
     p_limit: pageSize,
     p_offset: (page - 1) * pageSize,
-    p_sort: sort,
+    p_sort: category === "food" && (sort === "price_asc" || sort === "price_desc") ? "latest" : sort,
     p_include_map: includeMap,
   });
 
@@ -143,15 +143,15 @@ export const getListing = cache(async (category: ListingRow["category"], id: str
 
 export async function getCategoryCounts(category: ListingRow["category"], labels: string[]) {
   const supabase = createServerSupabaseClient();
-  const counts = await Promise.all(labels.map(async (label) => {
-    const { count, error } = await supabase
-      .from("listings")
-      .select("id", { count: "exact", head: true })
-      .eq("category", category)
-      .eq("status", "published")
-      .contains("filter_tags", [label]);
-    if (error) throw new Error(`Unable to count ${label}: ${error.message}`);
-    return [label, count ?? 0] as const;
-  }));
-  return Object.fromEntries(counts) as Record<string, number>;
+  const { data, error } = await supabase
+    .from("listings")
+    .select("filter_tags")
+    .eq("category", category)
+    .eq("status", "published");
+  if (error) {
+    console.error("Unable to load " + category + " tag counts: " + error.message);
+    return Object.fromEntries(labels.map((label) => [label, 0])) as Record<string, number>;
+  }
+  const tags = (data ?? []).map((row) => Array.isArray(row.filter_tags) ? row.filter_tags : []);
+  return Object.fromEntries(labels.map((label) => [label, tags.filter((listingTags) => listingTags.includes(label)).length])) as Record<string, number>;
 }

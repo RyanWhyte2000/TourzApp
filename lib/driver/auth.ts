@@ -1,1 +1,5 @@
-export { getProviderAccount as getDriverAccount } from "../providers/account";
+import { getProviderAccount } from "../providers/account";
+
+export async function getDriverAccount() {
+  return getProviderAccount("driver");
+}

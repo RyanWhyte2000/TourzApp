@@ -1,3 +1,4 @@
+import { dashboardHref } from "@/lib/providers/dashboard";
 import type { Metadata } from "next";
 import { CalendarDays, ChevronRight, Heart, Mail, MapPin, ReceiptText, Settings, UserRound, Users } from "lucide-react";
 import Link from "next/link";
@@ -29,8 +30,7 @@ export default async function ProfilePage() {
 
   const name = typeof user.user_metadata.full_name === "string" ? user.user_metadata.full_name : "Traveler";
   const joined = new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(new Date(user.created_at));
-  const { data: provider } = await supabase.from("provider_profiles").select("provider_type, display_name").eq("user_id", user.id).maybeSingle();
-  const providerLabel = provider && isProviderType(provider.provider_type) ? providerDefinitions[provider.provider_type].label : null;
+  const { data: providers } = await supabase.from("provider_profiles").select("provider_type, display_name").eq("user_id", user.id);
   const { data: reservationData, error: reservationsError } = await supabase
     .from("reservations")
     .select("id, listing_id, category, starts_at, ends_at, party_size, total, status, payment_status, listings(title, image_url, subtitle)")
@@ -47,8 +47,7 @@ export default async function ProfilePage() {
           <span className="flex size-16 items-center justify-center rounded-full bg-white/20"><UserRound className="size-8" /></span>
           <h1 className="mt-5 text-3xl font-bold tracking-tight">{name}</h1>
           <p className="mt-1 text-emerald-100">Your Tourz traveler profile</p>
-          {providerLabel && <p className="mt-3 inline-flex rounded-full bg-white/20 px-3 py-1 text-sm font-semibold">{providerLabel}</p>}
-          {provider?.provider_type === "driver" && <Link href="/driver" className="mt-4 block text-sm font-semibold text-white underline underline-offset-4">Open driver dashboard →</Link>}
+          {(providers ?? []).map((provider) => isProviderType(provider.provider_type) && <Link key={provider.provider_type} href={dashboardHref(provider.provider_type)} className="mt-4 block text-sm font-semibold text-white underline underline-offset-4">Open {providerDefinitions[provider.provider_type].label.toLowerCase()} dashboard →</Link>)}
         </div>
         <div className="grid gap-5 p-7 sm:grid-cols-2 sm:p-10">
           <div className="rounded-2xl bg-slate-50 p-5">
@@ -66,7 +65,7 @@ export default async function ProfilePage() {
             <Heart className="size-5 text-emerald-600" />
           </Link>
           <Link href="/settings" className="flex items-center justify-between rounded-2xl border border-slate-200 p-5 transition hover:bg-slate-50 sm:col-span-2"><span><span className="font-semibold">Account settings</span><span className="mt-1 block text-sm text-slate-500">Manage preferences, notifications, privacy, and host options.</span></span><Settings className="size-5 text-emerald-600" /></Link>
-          <Link href="/host/profiles" className="flex items-center justify-between rounded-2xl border border-emerald-200 p-5 transition hover:bg-emerald-50 sm:col-span-2"><span><span className="font-semibold">{providerLabel ? `${providerLabel} profile` : "Set up your provider profile"}</span><span className="mt-1 block text-sm text-slate-500">{providerLabel && provider ? `Manage ${provider.display_name} and your listings.` : "Choose Driver, Hotel Owner, Car Rental Company, Airbnb Owner, or Restaurant Owner."}</span></span><ChevronRight className="size-5 shrink-0 text-emerald-600" /></Link>
+          <Link href="/host/profiles" className="flex items-center justify-between rounded-2xl border border-emerald-200 p-5 transition hover:bg-emerald-50 sm:col-span-2"><span><span className="font-semibold">Your businesses</span><span className="mt-1 block text-sm text-slate-500">Manage your provider categories, business details, and listings.</span></span><ChevronRight className="size-5 shrink-0 text-emerald-600" /></Link>
         </div>
       </div>
 

@@ -65,11 +65,11 @@ export default function ListingCard({
               ))}
             </div>
           )}
-          <div className="text-right">
+          {category !== "food" && <div className="text-right">
             <span className="text-base font-bold">{price} <span className="text-xs font-medium text-slate-500">USD</span></span>
             <span className="text-sm font-medium">{category === "transport" ? "/day" : priceSuffix}</span>
             {totalPrice && <p className="text-xs font-medium text-slate-500 underline">{totalPrice}</p>}
-          </div>
+          </div>}
         </div>
       </div>
     </article>

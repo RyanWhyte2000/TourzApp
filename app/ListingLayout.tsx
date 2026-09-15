@@ -27,6 +27,7 @@ export type ListingItem = {
 };
 
 export type ListingSearchParams = {
+  category?: ListingCategory;
   where?: string | string[];
   pickup?: string | string[];
   dropoff?: string | string[];
@@ -92,7 +93,7 @@ export function filterListings(
     const rating = Number(item.rating);
 
     if (destination && !haystack.includes(destination)) return false;
-    if (price < minimumPrice || price > maximumPrice) return false;
+    if (search.category !== "food" && (price < minimumPrice || price > maximumPrice)) return false;
     if (tags.some((tag) => !haystack.includes(tag.toLocaleLowerCase()))) return false;
     if (rail && !haystack.includes(rail)) return false;
 
@@ -160,7 +161,7 @@ export default function ListingLayout({
         </h1>
         <div className="flex flex-wrap items-center gap-2">
           <MobileFilters category={category} resultCount={resultCount} />
-          <SortSelect />
+          <SortSelect category={category} />
           <ViewSwitcher view={view} />
         </div>
       </div>

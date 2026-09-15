@@ -14,7 +14,9 @@ function refreshProvider(type: ProviderType) {
 }
 
 export async function saveProviderListing(_: ProviderActionState, form: FormData): Promise<ProviderActionState> {
-  const { supabase, user, profile, error } = await getProviderAccount();
+  const type = form.get("provider_type");
+  if (!isProviderType(type)) return { error: "Choose a provider category." };
+  const { supabase, user, profile, error } = await getProviderAccount(type);
   if (error || !user || !profile || !isProviderType(profile.provider_type)) return { error: "Sign in with a provider profile to manage listings." };
   const parsed = parseProviderListing(form, profile.provider_type);
   if (parsed.error) return { error: parsed.error };
@@ -32,7 +34,9 @@ export async function saveProviderListing(_: ProviderActionState, form: FormData
 }
 
 export async function setProviderListingStatus(_: ProviderActionState, form: FormData): Promise<ProviderActionState> {
-  const { supabase, user, profile, error } = await getProviderAccount();
+  const type = form.get("provider_type");
+  if (!isProviderType(type)) return { error: "Choose a provider category." };
+  const { supabase, user, profile, error } = await getProviderAccount(type);
   if (error || !user || !profile || !isProviderType(profile.provider_type)) return { error: "Sign in with a provider profile to manage listings." };
   const id = String(form.get("service_id") ?? "");
   const status = String(form.get("status") ?? "");
@@ -46,7 +50,9 @@ export async function setProviderListingStatus(_: ProviderActionState, form: For
 }
 
 export async function updateProviderBooking(_: ProviderActionState, form: FormData): Promise<ProviderActionState> {
-  const { supabase, user, profile, error } = await getProviderAccount();
+  const type = form.get("provider_type");
+  if (!isProviderType(type)) return { error: "Choose a provider category." };
+  const { supabase, user, profile, error } = await getProviderAccount(type);
   if (error || !user || !profile || !isProviderType(profile.provider_type)) return { error: "Sign in with a provider profile to manage bookings." };
   const id = String(form.get("booking_id") ?? "");
   const { data, error: lookupError } = await supabase.from("reservations").select("id, listing_id, status, driver_status, listings!inner(provider_profile_id)").eq("id", id).eq("listings.provider_profile_id", profile.id).maybeSingle();

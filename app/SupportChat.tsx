@@ -13,7 +13,7 @@ const quickReplies = [
   { label: "Wishlist", message: "I need help with my wishlist.", response: "Tap the heart on any listing to save it. Signed-in favorites sync to your account after the favorites database migration has been applied." },
 ] as const;
 
-export default function SupportChat({ variant = "header" }: { variant?: "header" | "menu" }) {
+export default function SupportChat({ variant = "header" }: { variant?: "header" | "menu" | "floating" }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, sender: "support", text: "Hi! I’m the Tourz Support Assistant. How can I help with your trip today?" },
@@ -46,7 +46,7 @@ export default function SupportChat({ variant = "header" }: { variant?: "header"
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger className={variant === "menu" ? "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 text-sm font-semibold text-white transition hover:bg-emerald-700" : "inline-flex h-10 items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 text-sm font-semibold shadow-sm transition hover:bg-emerald-50"}>
+      <Dialog.Trigger aria-label={variant === "floating" ? "Open support chat" : undefined} className={variant === "menu" ? "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 text-sm font-semibold text-white transition hover:bg-emerald-700" : variant === "floating" ? "fixed bottom-5 right-5 z-40 inline-flex h-14 items-center gap-2 rounded-full bg-emerald-700 px-5 text-sm font-semibold text-white shadow-xl transition hover:bg-emerald-800" : "inline-flex h-10 items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 text-sm font-semibold shadow-sm transition hover:bg-emerald-50"}>
         <span className="flex size-7 items-center justify-center rounded-full bg-emerald-600 text-white"><Bot className="size-4" /></span>
         Support
       </Dialog.Trigger>

@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { consistentFetch } from "./consistent-fetch";
 
 export function createServerSupabaseClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -11,6 +12,7 @@ export function createServerSupabaseClient() {
   }
 
   return createClient(url, publishableKey, {
+    global: { fetch: consistentFetch },
     auth: {
       autoRefreshToken: false,
       detectSessionInUrl: false,

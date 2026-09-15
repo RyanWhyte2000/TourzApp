@@ -2,7 +2,7 @@
 
 import { Drawer } from "@base-ui/react/drawer";
 import Link from "next/link";
-import { BedDouble, CarFront, Heart, Home, Info, LifeBuoy, Menu, Search, Palmtree, Store, UserRound, UsersRound, UtensilsCrossed, X } from "lucide-react";
+import { BedDouble, CarFront, Home, Info, LifeBuoy, Menu, Search, Palmtree, Store, UserRound, UsersRound, UtensilsCrossed, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { ReactNode } from "react";
@@ -18,11 +18,10 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
   const navigation = [
     { label: "Home", href: "/", icon: Home },
     { label: "Plan a Trip", href: "/plan", icon: CarFront },
-    { label: "Wishlist", href: "/wishlist", icon: Heart },
     { label: "About Us", href: "/about", icon: Info },
     { label: "Become a Host", href: "/become-a-host", icon: UsersRound },
     { label: "Help Center", href: "/help", icon: LifeBuoy },
-  ].filter((item) => pathname !== "/" || item.href !== "/wishlist");
+  ];
   const categories = [
     { label: "Stays", href: "/airbnb", icon: BedDouble },
     { label: "Local driver", href: "/local-driver", icon: UsersRound },
@@ -44,20 +43,12 @@ export default function NavigationMenuDemo({ authControl }: { authControl?: Reac
       </nav>
 
       <div className="hidden items-center gap-4 lg:flex">
-        <SupportChat />
         <NotificationBell />
         {authControl ?? <Link href="/login" className="flex size-10 items-center justify-center overflow-hidden rounded-full bg-slate-100"><UserRound className="size-5" /></Link>}
       </div>
 
       <div className="flex items-center gap-2 lg:hidden">
         {authControl ?? <Link href="/login" aria-label="Account" className="flex size-10 items-center justify-center rounded-full border border-slate-200"><UserRound className="size-5" /></Link>}
-        {pathname !== "/" && <Link
-          href="/wishlist"
-          aria-label="Open wishlist"
-          className="flex size-10 items-center justify-center rounded-full border border-slate-200 transition hover:bg-slate-50"
-        >
-          <Heart className="size-5" />
-        </Link>}
         <Drawer.Root open={isSearchOpen} onOpenChange={setIsSearchOpen}>
           <Drawer.Trigger
             aria-label="Open search"
