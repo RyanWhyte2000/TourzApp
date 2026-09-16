@@ -1,0 +1,9 @@
+Tourz is deployed as {{ include "tourz.fullname" . }}.
+
+To access it locally:
+  kubectl --namespace {{ .Release.Namespace }} port-forward service/{{ include "tourz.fullname" . }} 3000:{{ .Values.service.port }}
+
+Then open http://localhost:3000.
+
+NEXT_PUBLIC_* settings are embedded in the image at build time.
+See charts/tourz/README.md for image build and ingress configuration.

@@ -1,0 +1,77 @@
+replicaCount: 1
+
+image:
+  # Replace with your registry/repository before deployment.
+  repository: tourz
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: tourz.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  # - secretName: tourz-tls
+  #   hosts:
+  #     - tourz.example.com
+
+# Server-only environment variables. NEXT_PUBLIC_* values require an image rebuild.
+env: {}
+# Existing Kubernetes Secrets/ConfigMaps, e.g. [{secretRef: {name: tourz-runtime}}].
+envFrom: []
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 512Mi
+
+podAnnotations: {}
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: [ALL]
+
+startupProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  periodSeconds: 5
+  failureThreshold: 30
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 2
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  periodSeconds: 20
+  timeoutSeconds: 2
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

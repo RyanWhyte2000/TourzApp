@@ -1,0 +1,23 @@
+# Replace these before deploying.
+image:
+  repository: registry.example.com/your-team/tourz
+  tag: "0.1.0"
+
+# imagePullSecrets:
+#   - name: registry-credentials
+
+ingress:
+  enabled: false
+  className: ""
+  hosts:
+    - host: tourz.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  # - secretName: tourz-tls
+  #   hosts: [tourz.example.com]
+
+# envFrom:
+#   - secretRef:
+#       name: tourz-runtime

@@ -77,6 +77,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+## Deploy on Kubernetes with Helm
+
+The [Tourz Helm chart](charts/tourz/README.md) includes image build instructions, configurable deployment values, health checks, and optional ingress/TLS. Build the root `Dockerfile` with your public configuration, push the image, and install `charts/tourz` with your image repository and tag.
+
 ## Consistency and network failures
 
 Authoritative data favors consistency during database outages. Checkout retries reuse a persistent reservation ID to prevent duplicate bookings after lost responses. See [the consistency policy](docs/consistency.md) for behavior, verification, and deployment limits.

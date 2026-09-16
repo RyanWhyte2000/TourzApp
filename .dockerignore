@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.env*
+!.env.example
+captures
+output
+tests
+docs
+charts
+*.tsbuildinfo
+*.log
+.DS_Store
