@@ -1,6 +1,8 @@
 # Tourz Sequence Diagrams
 
-These diagrams are based on the current app structure in `app/`, `lib/listings/`, `lib/wishlist/`, and `lib/supabase/`.
+These Mermaid sequence flows describe the implemented TourzApp journeys. Open this document in a Mermaid-enabled Markdown viewer to see the diagrams.
+
+Flows 1–6 cover discovery, search, authentication, and wishlists; 7 covers checkout and safe retries; 8–9 cover listing creation and settings; 10–13 cover provider profiles, dashboards, listing availability, and booking fulfillment.
 
 ## 1. Browse Listings From Home Or Category Page
 
@@ -220,84 +222,100 @@ sequenceDiagram
     end
 ```
 
-## 7. Complete A Reservation
+## 7. Complete A Reservation And Retry Safely
+
+Source: `app/checkout/[category]/[id]/page.tsx`, `app/checkout/actions.ts`, `lib/reservations/attempt.ts`.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User
-    participant Browser
-    participant CheckoutPage as Checkout Page
-    participant CheckoutForm
-    participant ReservationAction as `createReservation`
-    participant AuthClient as Auth Supabase Client
-    participant Supabase
-    participant Confirmation as Reservation Page
+    actor Traveler
+    participant Checkout as Checkout page / form
+    participant Auth as Supabase Auth
+    participant Action as createReservation
+    participant DB as Supabase database
+    participant Confirmation as Reservation page
 
-    User->>Browser: Choose booking CTA
-    Browser->>CheckoutPage: Request `/checkout/:category/:id`
-    CheckoutPage->>AuthClient: Get current user
-    alt User is not signed in
-        AuthClient-->>CheckoutPage: No user
-        CheckoutPage-->>Browser: Redirect to login with checkout `next` path
-    else User is signed in
-        AuthClient-->>CheckoutPage: User session
-        CheckoutPage->>Supabase: Load published listing
-        Supabase-->>CheckoutPage: Listing details
-        CheckoutPage-->>CheckoutForm: Render dates, party size, and price
-        User->>CheckoutForm: Enter reservation details
-        CheckoutForm->>CheckoutForm: Preview units, subtotal, and 8% fee
-        User->>ReservationAction: Confirm reservation
-        ReservationAction->>ReservationAction: Validate listing, dates, and party size
-        ReservationAction->>AuthClient: Verify current user
-        ReservationAction->>Supabase: Re-fetch published listing and authoritative price
-        Supabase-->>ReservationAction: Listing row
-        ReservationAction->>ReservationAction: Calculate units, subtotal, fee, and total
-        ReservationAction->>Supabase: Insert `reservations` row
-        alt Insert succeeds
-            Supabase-->>ReservationAction: Reservation ID
-            ReservationAction-->>Confirmation: Redirect to `/reservations/:id`
-            Confirmation-->>User: Show reservation details
-        else Validation or insert fails
-            ReservationAction-->>CheckoutForm: Return error
-            CheckoutForm-->>User: Display error without leaving checkout
+    Traveler->>Checkout: Open checkout for a listing
+    opt Missing or invalid attempt UUID
+        Checkout-->>Traveler: Redirect to checkout URL with new attempt UUID
+        Traveler->>Checkout: Open URL with persistent attempt UUID
+    end
+    Checkout->>Auth: Verify signed-in user
+    alt No authenticated user
+        Checkout-->>Traveler: Redirect to login, preserving checkout URL
+    else Authenticated
+        Checkout->>DB: Find reservation by attempt ID, user, and listing
+        alt Reservation already exists
+            Checkout-->>Traveler: Redirect to existing reservation
+        else No existing reservation
+            Checkout->>DB: Load published listing
+            Checkout-->>Traveler: Show checkout or 404 if missing
+            Traveler->>Action: Submit details, pay_later, and same attempt ID
+            Action->>Action: Validate attempt, payment option, dates, category, and party size
+            Action->>Auth: Verify user again
+            Action->>DB: Find existing reservation for this attempt
+            alt Existing reservation found
+                DB-->>Action: Existing reservation ID
+            else No existing reservation
+                Action->>DB: Re-fetch published listing and authoritative price
+                Action->>Action: Calculate totals from validated dates and listing price
+                Note over Action: Stays and transport use duration plus 8% fee.<br/>Food subtotal, fee, and total are zero.
+                Action->>DB: Insert with attempt UUID as primary key
+                Note over Action,DB: status=confirmed, payment_method=pay_later,<br/>payment_status=not_charged
+                alt Insert succeeds
+                    DB-->>Action: Reservation ID
+                else Insert returns error or missing result
+                    Action->>DB: Recheck attempt ID, user, and listing
+                    DB-->>Action: Existing ID, no match, or lookup error
+                end
+            end
+            alt Reservation ID established
+                Action-->>Confirmation: Redirect to reservation
+                Confirmation-->>Traveler: Show reservation details
+            else Outcome unknown or network exception
+                Action-->>Traveler: Retry from same checkout or check My reservations
+                Note over Traveler,DB: Reloads and retries retain the attempt ID.<br/>Primary key prevents duplicate insertion; existing rows are never overwritten.
+            end
         end
     end
+    Note over Action,DB: Validation, authentication, or availability failures return an error before insertion.<br/>A published listing check does not implement inventory locking or payment collection.
 ```
 
 ## 8. Create A Host Listing Draft
+
+Source: `app/host/onboarding/actions.ts`.
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Host
-    participant OnboardingForm
-    participant HostAction as `createHostListing`
-    participant AuthClient as Auth Supabase Client
-    participant Supabase
-    participant DraftPage as Host Listing Page
+    participant Form as Host onboarding
+    participant Action as createHostListing
+    participant Auth as Supabase Auth
+    participant DB as Supabase database
 
-    Host->>OnboardingForm: Enter business and listing details
-    OnboardingForm->>HostAction: Submit form data
-    HostAction->>AuthClient: Get current user
-    alt Host is not signed in
-        AuthClient-->>HostAction: No user
-        HostAction-->>OnboardingForm: Return sign-in error
-    else Host is signed in
-        AuthClient-->>HostAction: User session
-        HostAction->>HostAction: Validate category, content, price, and image URL
-        HostAction->>HostAction: Generate unique listing slug
-        HostAction->>HostAction: Build category filters, metadata, and price suffix
-        HostAction->>Supabase: Insert listing with `status = draft`
-        alt Draft creation succeeds
-            Supabase-->>HostAction: New listing ID
-            HostAction->>Supabase: Upsert host settings and service category
-            Supabase-->>HostAction: Host settings saved
-            HostAction-->>DraftPage: Redirect to `/host/listings/:id`
-            DraftPage-->>Host: Display new draft
-        else Draft creation fails
-            Supabase-->>HostAction: Insert error
-            HostAction-->>OnboardingForm: Return migration/setup error
+    Host->>Form: Choose provider category and enter listing details
+    Form->>Action: Submit form
+    Action->>Auth: Verify current user
+    Action->>DB: Load user's profile for selected provider type
+    alt Not signed in, profile missing, or category mismatch
+        Action-->>Form: Return error
+    else Profile and category valid
+        Action->>Action: Validate content, image URL, and price
+        Note over Action: Food listings use price zero.
+        alt Invalid details
+            Action-->>Form: Return validation error
+        else Valid details
+            Action->>Action: Generate slug, category filters, and metadata
+            Action->>DB: Insert draft with owner_id and provider_profile_id
+            alt Insert fails
+                Action-->>Form: Return creation error
+            else Insert succeeds
+                DB-->>Action: Listing ID
+                Action->>Action: Revalidate provider profile page
+                Action-->>Host: Redirect to /host/listings/:id
+            end
         end
     end
 ```
@@ -342,6 +360,160 @@ sequenceDiagram
             SettingsForm-->>User: Display “Settings saved”
         end
     end
+```
+
+## 10. Create Or Edit A Provider Profile
+
+Source: `app/host/profiles/actions.ts`.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Provider
+    participant Form as Provider profile form
+    participant Action as saveProviderProfile
+    participant Auth as Supabase Auth
+    participant DB as Supabase database
+
+    Provider->>Form: Choose business category and submit details
+    Form->>Action: Submit profile
+    Action->>Auth: Verify user
+    Action->>Action: Validate provider type and business fields
+    alt Authentication or validation fails
+        Action-->>Form: Return error
+    else Valid request
+        Action->>DB: Find profile by user_id and provider_type
+        alt Lookup fails
+            Action-->>Form: Return load error
+        else Existing profile
+            Action->>DB: Update business fields on owned profile
+        else New category
+            Action->>DB: Insert owned profile with provider_type
+        end
+        opt Save attempted
+            alt Save fails
+                Action-->>Form: Return save error
+            else Saved
+                Action->>Action: Revalidate profiles, traveler profile, and dashboards
+                Action-->>Form: Provider profile saved
+            end
+        end
+    end
+    Note over Provider,DB: One account can have multiple categories.<br/>Editing a profile does not change its provider type.
+```
+
+## 11. Open And Switch Provider Dashboards
+
+Source: `app/host/dashboard/page.tsx`, `app/host/dashboard/[type]/page.tsx`, `lib/providers/account.ts`.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Provider
+    participant Page as Dashboard route
+    participant Account as getProviderAccount
+    participant Auth as Supabase Auth
+    participant DB as Supabase database
+
+    Provider->>Page: Open dashboard or select a business category
+    Page->>Account: Resolve account and selected profile
+    Account->>Auth: Verify user
+    Account->>DB: Load user's provider profiles ordered by creation
+    Account-->>Page: User, selected profile, profiles, or error
+    alt Not signed in
+        Page-->>Provider: Redirect to login with return path
+    else Profile lookup fails
+        Page-->>Provider: Show error state
+    else No matching profile
+        Page-->>Provider: Redirect to profile setup
+    else Entry route or driver profile
+        Page-->>Provider: Redirect to category dashboard or /driver
+    else Selected non-driver dashboard
+        par Load listings
+            Page->>DB: Select owned listings for selected profile and category
+        and Load bookings
+            Page->>DB: Select reservations joined to selected profile's listings
+        end
+        alt Either query fails
+            Page-->>Provider: Show dashboard error
+        else Queries succeed
+            Page-->>Provider: Render listings, bookings, totals, and profile switcher
+        end
+    end
+```
+
+## 12. Edit, Publish, Or Pause A Provider Listing
+
+Source: `app/host/dashboard/actions.ts`.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Provider
+    participant Controls as Dashboard listing controls
+    participant Action as Provider listing action
+    participant Account as getProviderAccount
+    participant DB as Supabase database
+
+    Provider->>Controls: Save edits, publish, or pause listing
+    Controls->>Action: Submit provider type, listing ID, and changes
+    Action->>Account: Verify signed-in user and provider profile
+    alt Invalid type or unavailable account/profile
+        Action-->>Controls: Return error
+    else Authorized profile
+        alt Edit listing
+            Action->>Action: Validate category-specific fields
+            Action->>DB: Load existing owned listing within profile and category
+            Action->>DB: Update fields and merge category filters
+        else Publish or pause
+            Action->>Action: Accept only published or archived status
+            Action->>DB: Update status scoped to owner, profile, and category
+        end
+        alt Validation, lookup, or write fails
+            Action-->>Controls: Return error
+        else Write succeeds
+            Action->>Action: Revalidate dashboard, profile, and listing pages
+            Action-->>Controls: Show success
+        end
+    end
+    Note over Controls,DB: Pausing sets status to archived.<br/>Existing reservations remain unchanged.
+```
+
+## 13. Confirm, Start, Complete, Or Cancel A Booking
+
+Source: `app/host/dashboard/actions.ts`, `lib/driver/types.ts`. The Driver dashboard has corresponding actions in `app/driver/actions.ts`.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Provider
+    participant Controls as Booking controls
+    participant Action as updateProviderBooking
+    participant Account as getProviderAccount
+    participant DB as Supabase database
+
+    Provider->>Controls: Choose booking action
+    Controls->>Action: Submit booking ID, provider type, and action
+    Action->>Account: Verify signed-in user and selected profile
+    Action->>DB: Load booking joined to selected profile's listing
+    alt Unauthorized or booking unavailable
+        Action-->>Controls: Return error
+    else Booking found
+        Action->>Action: Validate transition from current status and driver_status
+        Note over Action: Confirm: pending + scheduled to confirmed.<br/>Start: confirmed + scheduled to in_progress.<br/>Complete: confirmed + in_progress to completed.<br/>Cancel: scheduled to cancelled.<br/>Cancelled or completed bookings reject further changes.
+        alt Transition invalid
+            Action-->>Controls: Ask provider to refresh
+        else Transition valid
+            Action->>DB: Update matching ID, listing ID, and previously read statuses
+            alt Write fails or statuses changed concurrently
+                Action-->>Controls: Ask provider to refresh and retry
+            else Updated
+                Action->>Action: Revalidate provider views, traveler profile, and reservation
+                Action-->>Controls: Booking updated
+            end
+        end
+    end
+    Note over Provider,DB: Service progress is stored in driver_status for every provider type.<br/>Cancellation does not process a refund or alter payment records.
 ```
 
 ## Notes
