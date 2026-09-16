@@ -33,14 +33,12 @@ The migrations restrict providers to their own listings and bookings and allow o
 SQL checks under `supabase/tests/` run within transactions and roll back every fixture. Application checks:
 
 ```bash
-node_modules/.bin/jiti tests/provider-profiles.test.ts
-node_modules/.bin/jiti tests/driver-dashboard.test.ts
-node_modules/.bin/jiti tests/provider-dashboards.test.ts
-node --test tests/provider-dashboard-render.test.mjs
-node --test tests/bug-regressions.mjs
+npm test
 npm run lint
 npm run build
 ```
+
+`npm test` runs every `tests/*.test.ts` and `tests/*.test.mjs` file using Node's test runner and Jiti for TypeScript imports. Tests cover trip planning, reservation dates, safe sign-in redirects, provider validation, booking workflows, dashboard rendering, and reservation recovery. They do not require a running app or live database. Use `npm run test:watch` to rerun tests as files change.
 
 ## Getting Started
 
